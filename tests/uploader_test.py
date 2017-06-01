@@ -9,10 +9,10 @@ from definitions import ROOT_DIR
 
 def test_parse_pan():
 
-    df = modules.uploader.parse_pan(ROOT_DIR +'/data/test_pan.txt')
-    df.to_csv(ROOT_DIR + '/data/test_parsed.txt', sep='\t', index=False)
+    df = modules.uploader.parse_pan(ROOT_DIR +'/tests/data/test_pan.txt')
+    df.to_csv(ROOT_DIR + '/tests/data/test_parsed.txt', sep='\t', index=False)
 
-    with open(ROOT_DIR + '/data/test_parsed.txt') as f:
+    with open(ROOT_DIR + '/tests/data/test_parsed.txt') as f:
         hash = sha1(str(sorted(f.readlines())).encode('utf-8')).hexdigest()
 
 
@@ -30,3 +30,5 @@ def test_pan_to_dict():
     assert pan_dict == test_dict
 
 
+test_pan_to_dict()
+test_parse_pan()
