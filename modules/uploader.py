@@ -1,8 +1,6 @@
 
 from Bio import SeqIO
-from os.path import basename
 import os
-import sys
 import pandas as pd
 import json
 import re
@@ -24,7 +22,7 @@ def parse_pan(file):
     df = pd.read_csv(file, sep=None)
 
     #drop columns we don't need
-    df = df.drop(['LocusID', 'Allele'], axis=1)
+    df = df.drop(['LocusName', 'Allele'], axis=1)
 
     #drop rows we don't need
     df = df.dropna(axis=0, how='any')
@@ -75,6 +73,50 @@ def pan_to_dict(df):
 
     return pan_dict
 
+def get_sequence_dict(file):
+    """
+    :param:
+        a fasta file
+    :return: 
+        A dictionary in the format {header:sequence, header:sequence, ....}
+    """
+
+    sequence_dict = {}
+    for record in SeqIO.parse(file, "fasta"):
+        sequence_dict[record.description] = str(record.seq)
+
+    return sequence_dict
+
+''''
+
+def merge_dicts(sequence_dict, pan_dict):
+    """
+    :param:
+        a fasta file
+    :return: 
+        A dictionary in the format {header:sequence, header:sequence, ....}
+    """
+    for record in pan_dict:
+        for panregion in pan_dict[record]:
+            for header in sequence_dict:
+
+'''
+
+
+def contig_name_parse(pan_contig):
+    """
+    The panseq contig name is unhelpful
+    :param:
+        a contig named by panseq
+    :return: 
+        the basename of the contig
+    """
+
+    m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+    # print(m.group(0))
+    m = re.search('(?<=\|).+', m.group(0))
+
+    return m.group(0)
 
 def json_dump(file, dict):
     with open(file, 'w') as fp:

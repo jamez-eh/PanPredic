@@ -12,7 +12,8 @@ def panseq():
     novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/pan_genome/PanPredic/panseq_findnew_pangenome.conf"], stdout=sys.stdout)
     novel.communicate()
 
-    #TODO: append these pangenome regions to current pangenome fastareference
+    # append these pangenome regions to current pangenome fastareference
+    join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', ROOT_DIR + '/novelPanResults/novelRegions.fasta')
     #TODO: Pass to database uploader
 
     #deletes the novel results AFTER they are appended to the pangenome and the
@@ -44,3 +45,8 @@ def join_files(file1, file2):
     first = open(file1, "a")
     first.write(data)
     first.close()
+
+
+
+
+panseq()

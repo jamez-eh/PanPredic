@@ -30,5 +30,13 @@ def test_pan_to_dict():
     assert pan_dict == test_dict
 
 
-test_pan_to_dict()
-test_parse_pan()
+def test_get_sequence_dict():
+
+    file = '/tests/data/genome_files/GCA_000091005.1_ASM9100v1_genomic.fna'
+    dict = modules.uploader.get_sequence_dict(ROOT_DIR + file )
+
+    test_data = modules.uploader.json_load(ROOT_DIR + '/tests/data/test_sequence_dict.json')
+
+    assert dict == test_data
+
+
