@@ -30,9 +30,9 @@ def parse_pan(file):
         chunk = chunk.dropna(axis=0, how='any')
     # if file does not exist write header
         if not os.path.isfile('filename.csv'):
-            chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', header='column_names',index=False)
+            chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', header='column_names',index=False, sep = '\t')
         else:  # else it exists so append without writing the header
-            chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', mode='a', header=False, index=False)
+            chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', mode='a', header=False, index=False, sep = '\t')
 
 
 parse_pan('/home/james/GenbankData/pan_genome.txt')
