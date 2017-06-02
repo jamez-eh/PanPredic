@@ -11,6 +11,22 @@ from definitions import ROOT_DIR
 
 
 
+def contig_name_parse(pan_contig):
+    """
+    The panseq contig name is unhelpful
+    :param:
+        a contig named by panseq
+    :return: 
+        the basename of the contig
+    """
+
+    m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+    #print(m.group(0))
+    m = re.search('(?<=\|).+', m.group(0))
+
+    return m.group(0)
+
+
 
 
 #drop rows with no value and drop columns we don't need
@@ -28,14 +44,10 @@ def parse_pan(file):
         chunk = chunk.drop(['LocusName', 'Allele'], axis=1)
     #drop rows we don't need
         chunk = chunk.dropna(axis=0, how='any')
-    # if file does not exist write header
-        if not os.path.isfile('filename.csv'):
-            chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', header='column_names',index=False, sep = '\t')
-        else:  # else it exists so append without writing the header
-            chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', mode='a', header=False, index=False, sep = '\t')
+
+        chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', mode='a', header=False, index=False, sep = '\t')
 
 
-parse_pan('/home/james/GenbankData/pan_genome.txt')
 
 #turn a datafarame to a list of rows lists
 def pan_to_dict(file):
@@ -48,6 +60,8 @@ def pan_to_dict(file):
         ex. {'Some_Contig_ID':[{'START','STOP','ORIENTATION','GENE_NAME'}, {}, ....], etc}
     """
     df = pd.read_csv(file, sep=None)
+    #os.remove(file)
+
     i = 0
     prev_ID = None
     pan_dict = {}
@@ -79,6 +93,7 @@ def pan_to_dict(file):
 
     return pan_dict
 
+
 def get_sequence_dict(file):
     """
     :param:
@@ -93,36 +108,15 @@ def get_sequence_dict(file):
 
     return sequence_dict
 
-''''
 
-def merge_dicts(sequence_dict, pan_dict):
-    """
-    :param:
-        a fasta file
-    :return: 
-        A dictionary in the format {header:sequence, header:sequence, ....}
-    """
+def merge_dicts(pan_dict):
+
     for record in pan_dict:
         for panregion in pan_dict[record]:
-            for header in sequence_dict:
-
-'''
-
-def contig_name_parse(pan_contig):
-    """
-    The panseq contig name is unhelpful
-    :param:
-        a contig named by panseq
-    :return: 
-        the basename of the contig
-    """
-
-    m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
-    #print(m.group(0))
-    m = re.search('(?<=\|).+', m.group(0))
-
-    return m.group(0)
-
+            pan = "1496178616000"
+            if pan in panregion.values()
+                panregion['DNAseq'] = 'CTGA'
+            print(panregion)
 
 
 def json_dump(file, dict):
@@ -185,4 +179,3 @@ data = gd.serialize(format="turtle")
 print(data)
 '''
 
-workflow('/home/james/GenbankData/pan_genome.txt')

@@ -40,3 +40,8 @@ def test_get_sequence_dict():
     assert dict == test_data
 
 
+dict = modules.uploader.pan_to_dict('/home/james/PanPredic/tests/data/test_genparsed.txt')
+
+modules.uploader.merge_dicts(dict)
+
+

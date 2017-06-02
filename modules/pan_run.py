@@ -14,10 +14,11 @@ def panseq():
 
     # append these pangenome regions to current pangenome fastareference
     join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', ROOT_DIR + '/novelPanResults/novelRegions.fasta')
+
     #TODO: Pass to database uploader
 
     #deletes the novel results AFTER they are appended to the pangenome and the
-    shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults')
+    #shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults')
 
     #finds a full set of pangenome regions for the queried genomes
     match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/pan_genome/PanPredic/panseq_match_pangenome.conf"], stdout=sys.stdout)
