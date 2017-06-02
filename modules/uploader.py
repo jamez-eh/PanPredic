@@ -20,9 +20,13 @@ def contig_name_parse(pan_contig):
         the basename of the contig
     """
 
-    m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
-    #print(m.group(0))
-    m = re.search('(?<=\|).+', m.group(0))
+    if re.search('(?<=\|)(.*?)(?=_E)', pan_contig):
+        m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+        m = re.search('(?<=\|).+', m.group(0))
+
+    else:
+        m = re.search('(?<=\|).+', pan_contig)
+        m = re.search('(?<=\|).+', m.group(0))
 
     return m.group(0)
 
@@ -108,13 +112,13 @@ def get_sequence_dict(file):
 
     return sequence_dict
 
-
+#merges sequence data for storage in blazegraph
 def merge_dicts(pan_dict):
 
     for record in pan_dict:
         for panregion in pan_dict[record]:
             pan = "1496178616000"
-            if pan in panregion.values()
+            if pan in panregion.values():
                 panregion['DNAseq'] = 'CTGA'
             print(panregion)
 
@@ -169,9 +173,27 @@ def main(dr):
     for f in os.listdir(dr):
         h = generate_hash(dr + f)
         for record in SeqIO.parse(open(dr + f), "fasta"):
-            d[record.id] = h
+            contig_name = contig_name_parse(record.id)
+            d[contig_name] = '<https://www.github.com/superphy#' + h + '/contigs/' + contig_name + '>'
     json_dump('hash_dict.json', d)
 
+
+#replaces contig names from panseq with those compatible with blazegraph
+def hash_merge(hash_dict, pan_dict):
+    for contig in pan_dict:
+        print(contig)
+        pan_dict[hash_dict[contig]] = pan_dict[contig]
+        del pan_dict[contig]
+
+    json_dump('merged.json', pan_dict)
+
+
+main('/home/james/PanPredic/tests/data/filteredgenomes/')
+
+
+hash_dict = json_load('/home/james/PanPredic/modules/hash_dict.json')
+
+hash_merge(hash_dict,)
 
 '''
 gd = app.modules.turtleGrapher.turtle_grapher.generate_turtle_skeleton(sys.argv[1])
