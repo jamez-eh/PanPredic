@@ -6,14 +6,14 @@ from definitions import ROOT_DIR
 
 args = 'perl lib/panseq.pl settings.txt'
 
-def panseq():
+def panseq(novel_config, match_config):
 
     #run panseq to find novel pangenome regions
-    novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/PanPredic/panseq_findnew_pangenome.conf"], stdout=sys.stdout)
+    novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", novel_config], stdout=sys.stdout)
     novel.communicate()
 
     # append these pangenome regions to current pangenome fastareference
-    join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', ROOT_DIR + '/novelPanResults/novelRegions.fasta')
+    join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', match_config)
 
     #TODO: Pass to database uploader
 
@@ -25,6 +25,7 @@ def panseq():
     match.communicate()
 
     #shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults2')
+
 
 
 #joins two files together
@@ -48,6 +49,3 @@ def join_files(file1, file2):
     first.close()
 
 
-
-
-panseq()
