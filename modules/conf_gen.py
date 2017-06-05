@@ -6,7 +6,7 @@ from definitions import ROOT_DIR
 # TODO: edit file locations of programs
 
 def gen_novel(genome_files):
-    with open(ROOT_DIR + 'panseq_findnew_pangenome.conf', 'wb') as f:
+    with open(ROOT_DIR + 'panseq_findnew_pangenome.conf2', 'wb') as f:
         f.writelines(['queryDirectory' + genome_files,
                     'referenceDirectory'	+ ROOT_DIR + '/PanGenomeRef',
                     'baseDirectory' + ROOT_DIR + '/novelPanResults',
@@ -23,7 +23,7 @@ def gen_novel(genome_files):
 
 
 def gen_match(genome_files):
-    with open(ROOT_DIR + 'panseq_match_pangenome.conf', 'wb') as f:
+    with open(ROOT_DIR + 'panseq_match_pangenome2.conf', 'wb') as f:
         f.writelines(['queryDirectory' + genome_files,
                     'queryFile' + ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta',
                     'baseDirectory' + ROOT_DIR + '/novelPanResults',

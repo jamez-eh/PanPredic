@@ -9,7 +9,7 @@ def pan(args_dict):
     query_dict = modules.conf_gen.generate_conf(args_dict['genomes'])
 
     # (2) run panseq
-     modules.pan_run.panseq(query_dict)
+    modules.pan_run.panseq(query_dict)
 
     # (3) Parse panseq results
     results_dict = modules.uploader.workflow()
