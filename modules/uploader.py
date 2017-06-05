@@ -39,7 +39,7 @@ def parse_pan(file):
     :param :
         A tab delimited csv file from a panseq output
     :return: 
-        writes a file with reduced headers and the NA's dropped
+       a file with reduced headers and the NA's dropped
     """
     #the file size is too big to read in all at once
     chunksize = 10 ** 6
@@ -51,6 +51,7 @@ def parse_pan(file):
 
         chunk.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', mode='a', header=False, index=False, sep = '\t')
 
+    return ROOT_DIR + '/tests/data/genparsed.txt'
 
 
 #turn a datafarame to a list of rows lists
@@ -135,12 +136,6 @@ def json_load(file):
     return data
 
 
-def workflow(file):
-
-    df = parse_pan(file)
-    pan_dict = pan_to_dict(df)
-    json_dump('pandump.json', pan_dict)
-
 
 #generates a hash for a file
 def generate_hash(filename):
@@ -201,3 +196,15 @@ data = gd.serialize(format="turtle")
 print(data)
 '''
 
+def workflow(pan_file, seq_file):
+
+    parsed_file = parse_pan(pan_file)
+    pan_dict = pan_to_dict(parsed_file)
+    seq_dict = get_sequence_dict(seq_file)
+    final_dict = merge_dicts(pan_dict, seq_dict)
+    #results_dict = hash_merge()
+
+    return final_dict
+
+
+    #json_dump('pandump.json', pan_dict)

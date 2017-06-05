@@ -9,7 +9,7 @@ args = 'perl lib/panseq.pl settings.txt'
 def panseq():
 
     #run panseq to find novel pangenome regions
-    novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/pan_genome/PanPredic/panseq_findnew_pangenome.conf"], stdout=sys.stdout)
+    novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/PanPredic/panseq_findnew_pangenome.conf"], stdout=sys.stdout)
     novel.communicate()
 
     # append these pangenome regions to current pangenome fastareference
@@ -21,10 +21,10 @@ def panseq():
     #shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults')
 
     #finds a full set of pangenome regions for the queried genomes
-    match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/pan_genome/PanPredic/panseq_match_pangenome.conf"], stdout=sys.stdout)
+    match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/PanPredic/panseq_match_pangenome.conf"], stdout=sys.stdout)
     match.communicate()
 
-    shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults2')
+    #shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults2')
 
 
 #joins two files together
