@@ -7,6 +7,7 @@ import pandas as pd
 import json
 import re
 from definitions import ROOT_DIR
+import pickle
 
 
 
@@ -199,6 +200,8 @@ print(data)
 
 def workflow(pan_file, seq_file, query_files):
 
+    pickle_file = ROOT_DIR + '/results_pickle.p'
+
     parsed_file = parse_pan(pan_file)
     pan_dict = pan_to_dict(parsed_file)
     seq_dict = get_sequence_dict(seq_file)
@@ -206,7 +209,8 @@ def workflow(pan_file, seq_file, query_files):
     hash_dict = main(query_files)
     results_dict = hash_merge(hash_dict, final_dict)
 
-    return results_dict
+    return pickle.dump(results_dict, open(pickle_file,'wb'))
+
 
 
     #json_dump('pandump.json', pan_dict)

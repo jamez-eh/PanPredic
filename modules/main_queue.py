@@ -12,7 +12,7 @@ def pan(args_dict):
     modules.pan_run.panseq(query_dict)
 
     # (3) Parse panseq results
-    results_dict = modules.uploader.workflow()
+    results_pickle = modules.uploader.workflow()
 
     # (4) upload pan data to blazegraph
 
