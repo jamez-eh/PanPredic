@@ -115,14 +115,14 @@ def get_sequence_dict(file):
     return sequence_dict
 
 #merges sequence data for storage in blazegraph
-def merge_dicts(pan_dict):
+def merge_dicts(pan_dict, seq_dict):
 
     for record in pan_dict:
         for panregion in pan_dict[record]:
-            pan = "1496178616000"
-            if pan in panregion.values():
-                panregion['DNAseq'] = 'CTGA'
-            print(panregion)
+            for header in seq_dict:
+                if header in panregion.values():
+                    panregion['DNAseq'] = seq_dict[header]
+    return {'PanGenomeRegion': pan_dict}
 
 
 def json_dump(file, dict):
@@ -185,12 +185,7 @@ def hash_merge(hash_dict, pan_dict):
     json_dump('merged.json', pan_dict)
 
 
-main('/home/james/PanPredic/tests/data/filteredgenomes/')
 
-
-hash_dict = json_load('/home/james/PanPredic/modules/hash_dict.json')
-
-hash_merge(hash_dict,)
 
 '''
 gd = app.modules.turtleGrapher.turtle_grapher.generate_turtle_skeleton(sys.argv[1])
@@ -209,8 +204,12 @@ def workflow(pan_file, seq_file, query_files):
     hash_dict = main(query_files)
     results_dict = hash_merge(hash_dict, final_dict)
 
-    return pickle.dump(results_dict, open(pickle_file,'wb'))
+    return pickle.dump(results_dict, open(pickle_file,'wb'), protocol=2)
 
 
+dict = {'PanGenomeRegions':{'contig1':[{'START':500,'STOP':600,'GENE_NAME':'beaver', 'LocusID':5}, {'START':200,'STOP':300,'GENE_NAME':'rusty'}], 'contig2': [{'START':900,'STOP':1000,'GENE_NAME':'lucky', 'LocusId':10}]}}
+seq_dict = {'contig1':'abc', 'contig2':'def'}
 
-    #json_dump('pandump.json', pan_dict)
+merge_dicts(dict, seq_dict)
+
+pickle.dump(dict, open(ROOT_DIR + '/results_pickle.p', 'wb'), protocol=2)
