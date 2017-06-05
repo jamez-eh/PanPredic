@@ -175,6 +175,7 @@ def main(dr):
 
 #replaces contig names from panseq with those compatible with blazegraph
 def hash_merge(hash_dict, pan_dict):
+
     for contig in pan_dict:
         print(contig)
         pan_dict[hash_dict[contig]] = pan_dict[contig]
@@ -196,15 +197,16 @@ data = gd.serialize(format="turtle")
 print(data)
 '''
 
-def workflow(pan_file, seq_file):
+def workflow(pan_file, seq_file, query_files):
 
     parsed_file = parse_pan(pan_file)
     pan_dict = pan_to_dict(parsed_file)
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
-    #results_dict = hash_merge()
+    hash_dict = main(query_files)
+    results_dict = hash_merge(hash_dict, final_dict)
 
-    return final_dict
+    return results_dict
 
 
     #json_dump('pandump.json', pan_dict)
