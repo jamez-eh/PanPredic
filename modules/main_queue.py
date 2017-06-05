@@ -1,15 +1,17 @@
 import modules.pan_run
 import modules.uploader
+import modules.conf_gen
 
-def pan():
+def pan(args_dict):
+
 
     # (1) generate conf files
+    query_dict = modules.conf_gen.generate_conf(args_dict['genomes'])
 
     # (2) run panseq
-     modules.pan_run.panseq()
+     modules.pan_run.panseq(query_dict)
 
     # (3) Parse panseq results
-
     results_dict = modules.uploader.workflow()
 
     # (4) upload pan data to blazegraph

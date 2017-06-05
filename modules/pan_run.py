@@ -6,7 +6,10 @@ from definitions import ROOT_DIR
 
 args = 'perl lib/panseq.pl settings.txt'
 
-def panseq(novel_config, match_config):
+def panseq(query_dict):
+
+    novel_config = query_dict['novel']
+    match_config = query_dict['match']
 
     #run panseq to find novel pangenome regions
     novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", novel_config], stdout=sys.stdout)

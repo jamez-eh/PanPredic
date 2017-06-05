@@ -19,6 +19,7 @@ def gen_novel(genome_files):
                     'percentIdentityCutoff	90',
                     'runMode	novel',
                     'overwrite 1'])
+        return f
 
 
 def gen_match(genome_files):
@@ -38,3 +39,15 @@ def gen_match(genome_files):
                     'runMode	pan',
                     'nameOrId	name',
                     'overwrite 1'])
+        return f
+
+#driver function generates both necessary conf files
+def generate_conf(genome_files):
+
+    query_dict = {}
+
+    query_dict['novel'] = gen_novel(genome_files)
+    query_dict['match'] = gen_match(genome_files)
+
+    return query_dict
+
