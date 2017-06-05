@@ -7,9 +7,9 @@ from definitions import ROOT_DIR
 
 def gen_novel(genome_files):
     with open(ROOT_DIR + 'panseq_findnew_pangenome.conf2', 'wb') as f:
-        f.writelines(['queryDirectory' + genome_files,
-                    'referenceDirectory'	+ ROOT_DIR + '/PanGenomeRef',
-                    'baseDirectory' + ROOT_DIR + '/novelPanResults',
+        f.writelines(['queryDirectory   ' + genome_files,
+                    'referenceDirectory '	+ ROOT_DIR + '/PanGenomeRef',
+                    'baseDirectory  ' + ROOT_DIR + '/novelPanResults',
                     'numberOfCores	4',
                     'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/',
                     'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/',
@@ -24,9 +24,9 @@ def gen_novel(genome_files):
 
 def gen_match(genome_files):
     with open(ROOT_DIR + 'panseq_match_pangenome2.conf', 'wb') as f:
-        f.writelines(['queryDirectory' + genome_files,
-                    'queryFile' + ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta',
-                    'baseDirectory' + ROOT_DIR + '/novelPanResults',
+        f.writelines(['queryDirectory   ' + genome_files,
+                    'queryFile  ' + ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta',
+                    'baseDirectory  ' + ROOT_DIR + '/novelPanResults',
                     'numberOfCores	4',
                     'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/',
                     'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/',
