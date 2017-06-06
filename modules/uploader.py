@@ -66,7 +66,7 @@ def pan_to_dict(file):
         ex. {'Some_Contig_ID':[{'START','STOP','ORIENTATION','GENE_NAME'}, {}, ....], etc}
     """
     df = pd.read_csv(file, sep=None)
-    #os.remove(file)
+    os.remove(file)
 
     i = 0
     prev_ID = None
@@ -203,7 +203,7 @@ def workflow(pan_file, seq_file):
     final_dict = merge_dicts(pan_dict, seq_dict)
     #hash_dict = main(query_files)
     #results_dict = hash_merge(hash_dict, final_dict)
-    print(final_dict)
+    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/results_dict.json', final_dict)
 
     return pickle.dump(final_dict, open(pickle_file,'wb'), protocol=2)
 
