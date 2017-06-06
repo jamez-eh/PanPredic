@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import shutil
-from modules.PanPredic.definitions import ROOT_DIR
+from definitions import ROOT_DIR
 
 
 args = 'perl lib/panseq.pl settings.txt'
@@ -16,10 +16,10 @@ def panseq(query_dict):
     #novel.communicate()
 
     # append these pangenome regions to current pangenome fastareference
-    join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', match_config)
+    #join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', match_config)
 
     #finds a full set of pangenome regions for the queried genomes
-    match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/PanPredic/panseq_match_pangenome.conf"], stdout=sys.stdout)
+    match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/backend/app/modules/PanPredic/panseq_match_pangenome.conf"], stdout=sys.stdout)
     match.communicate()
 
 

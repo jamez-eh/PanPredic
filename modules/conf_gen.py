@@ -1,4 +1,4 @@
-from modules.PanPredic.definitions import ROOT_DIR
+from definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS
 
 
 
@@ -8,38 +8,38 @@ from modules.PanPredic.definitions import ROOT_DIR
 def gen_novel(genome_files):
 
     with open(ROOT_DIR + 'panseq_findnew_pangenome.conf2', 'wb') as f:
-        f.writelines(['queryDirectory   ' + genome_files,
-                    'referenceDirectory '	+ ROOT_DIR + '/PanGenomeRef',
-                    'baseDirectory  ' + ROOT_DIR + '/novelPanResults',
-                    'numberOfCores	4',
-                    'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/',
-                    'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/',
-                    'minimumNovelRegionSize	500',
-                    'novelRegionFinderMode	no_duplicates',
-                    'muscleExecutable	/home/james/pan_genome/PanPredic/muscle3.8.31_i86linux64',
-                    'percentIdentityCutoff	90',
-                    'runMode	novel',
-                    'overwrite 1'])
+        f.writelines([b'queryDirectory   ' + genome_files.encode(),
+                    b'referenceDirectory '	+ ROOT_DIR.encode() + b'/PanGenomeRef',
+                    b'baseDirectory  ' + NOVEL_RESULTS.encode(),
+                    b'numberOfCores	4',
+                    b'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/',
+                    b'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/',
+                    b'minimumNovelRegionSize	500',
+                    b'novelRegionFinderMode	no_duplicates',
+                    b'muscleExecutable	/home/james/pan_genome/PanPredic/muscle3.8.31_i86linux64',
+                    b'percentIdentityCutoff	90',
+                    b'runMode	novel',
+                    b'overwrite 1'])
         return f
 
 
 def gen_match(genome_files):
     with open(ROOT_DIR + 'panseq_match_pangenome2.conf', 'wb') as f:
-        f.writelines(['queryDirectory   ' + genome_files,
+        f.writelines([b'queryDirectory   ' + genome_files.encode(),
                     #'queryFile  ' + ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta',
-                    'baseDirectory  ' + ROOT_DIR + '/novelPanResults',
-                    'numberOfCores	4',
-                    'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/',
-                    'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/',
-                    'minimumNovelRegionSize	500',
-                    'muscleExecutable	/home/james/pan_genome/PanPredic/muscle3.8.31_i86linux64',
-                    'novelRegionFinderMode	no_duplicates',
-                    'muscleExecutable	/home/james/pan_genome/PanPredic/muscle3.8.31_i86linux64',
-                    'fragmentationSize	500',
-                    'percentIdentityCutoff	90',
-                    'runMode	pan',
-                    'nameOrId	name',
-                    'overwrite 1'])
+                    b'baseDirectory  ' +  PAN_RESULTS.encode(),
+                    b'numberOfCores	4',
+                    b'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/',
+                    b'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/',
+                    b'minimumNovelRegionSize	500',
+                    b'muscleExecutable	/home/james/pan_genome/PanPredic/muscle3.8.31_i86linux64',
+                    b'novelRegionFinderMode	no_duplicates',
+                    b'muscleExecutable	/home/james/pan_genome/PanPredic/muscle3.8.31_i86linux64',
+                    b'fragmentationSize	500',
+                    b'percentIdentityCutoff	90',
+                    b'runMode	pan',
+                    b'nameOrId	name',
+                    b'overwrite 1'])
         return f
 
 #driver function generates both necessary conf files

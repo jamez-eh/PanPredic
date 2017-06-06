@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 import json
 import re
-from modules.PanPredic.definitions import ROOT_DIR
+from definitions import ROOT_DIR
 import pickle
 
 
@@ -208,7 +208,9 @@ def workflow(pan_file, seq_file):
     return pickle.dump(final_dict, open(pickle_file,'wb'), protocol=2)
 
 
-workflow('/home/james/GenbankData/pan_genome.txt', '/home/james/GenbankData/pangenome_fragments.fasta')
+
+
+#workflow('/home/james/GenbankData/pan_genome.txt', '/home/james/GenbankData/pangenome_fragments.fasta')
 '''
 dict = {'PanGenomeRegions':{'contig1':[{'START':500,'STOP':600,'GENE_NAME':'beaver', 'LocusID':5}, {'START':200,'STOP':300,'GENE_NAME':'rusty'}], 'contig2': [{'START':900,'STOP':1000,'GENE_NAME':'lucky', 'LocusId':10}]}}
 seq_dict = {'contig1':'abc', 'contig2':'def'}
