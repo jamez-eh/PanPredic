@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import shutil
-from definitions import ROOT_DIR
+from modules.PanPredic.definitions import ROOT_DIR
 
 
 args = 'perl lib/panseq.pl settings.txt'
@@ -12,27 +12,19 @@ def panseq(query_dict):
     match_config = query_dict['match']
 
     #run panseq to find novel pangenome regions
-    novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", novel_config], stdout=sys.stdout)
-    novel.communicate()
+    #novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", novel_config], stdout=sys.stdout)
+    #novel.communicate()
 
     # append these pangenome regions to current pangenome fastareference
     join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', match_config)
-
-    #TODO: Pass to database uploader
-
-    #deletes the novel results AFTER they are appended to the pangenome and the
-    #shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults')
 
     #finds a full set of pangenome regions for the queried genomes
     match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/PanPredic/panseq_match_pangenome.conf"], stdout=sys.stdout)
     match.communicate()
 
-    #shutil.rmtree('/home/james/pan_genome/PanPredic/PanResults2')
-
 
 
 #joins two files together
-
 def join_files(file1, file2):
     """
     :param :

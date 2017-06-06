@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 import json
 import re
-from definitions import ROOT_DIR
+from modules.PanPredic.definitions import ROOT_DIR
 import pickle
 
 
@@ -46,7 +46,7 @@ def parse_pan(file):
     chunksize = 10 ** 6
     for chunk in pd.read_csv(file, sep=None, chunksize=chunksize):
     #drop columns we don't need
-        chunk = chunk.drop(['LocusName', 'Allele'], axis=1)
+        chunk = chunk.drop(['LocusID', 'Allele'], axis=1)
     #drop rows we don't need
         chunk = chunk.dropna(axis=0, how='any')
 
@@ -193,7 +193,7 @@ data = gd.serialize(format="turtle")
 print(data)
 '''
 
-def workflow(pan_file, seq_file, query_files):
+def workflow(pan_file, seq_file):
 
     pickle_file = ROOT_DIR + '/results_pickle.p'
 
@@ -201,15 +201,19 @@ def workflow(pan_file, seq_file, query_files):
     pan_dict = pan_to_dict(parsed_file)
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
-    hash_dict = main(query_files)
-    results_dict = hash_merge(hash_dict, final_dict)
+    #hash_dict = main(query_files)
+    #results_dict = hash_merge(hash_dict, final_dict)
+    print(final_dict)
 
-    return pickle.dump(results_dict, open(pickle_file,'wb'), protocol=2)
+    return pickle.dump(final_dict, open(pickle_file,'wb'), protocol=2)
 
 
+workflow('/home/james/GenbankData/pan_genome.txt', '/home/james/GenbankData/pangenome_fragments.fasta')
+'''
 dict = {'PanGenomeRegions':{'contig1':[{'START':500,'STOP':600,'GENE_NAME':'beaver', 'LocusID':5}, {'START':200,'STOP':300,'GENE_NAME':'rusty'}], 'contig2': [{'START':900,'STOP':1000,'GENE_NAME':'lucky', 'LocusId':10}]}}
 seq_dict = {'contig1':'abc', 'contig2':'def'}
 
 merge_dicts(dict, seq_dict)
 
 pickle.dump(dict, open(ROOT_DIR + '/results_pickle.p', 'wb'), protocol=2)
+'''
