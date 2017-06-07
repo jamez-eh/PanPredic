@@ -10,7 +10,7 @@ def gen_novel(genome_files):
     with open(ROOT_DIR + '/panseq_novel_pangenome.conf', 'wb') as f:
         f.writelines([b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'referenceDirectory '	+ ROOT_DIR.encode() + b'/PanGenomeRef \n',
-                    b'baseDirectory  ' ROOT_DIR.encode() + NOVEL_RESULTS.encode() + b'\n',
+                    b'baseDirectory  ' + NOVEL_RESULTS.encode() + b'\n',
                     b'numberOfCores	4 \n',
                     b'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/ \n',
                     b'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/ \n',
@@ -27,7 +27,7 @@ def gen_match(genome_files):
     with open(ROOT_DIR + '/panseq_pan_pangenome.conf', 'wb') as f:
         f.writelines([b'queryDirectory   ' + genome_files.encode() + b'\n',
                     #'queryFile  ' + ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta',
-                    b'baseDirectory  ' +  PAN_RESULTS.encode() + b'\n',
+                    b'baseDirectory  '  +  PAN_RESULTS.encode() + b'\n',
                     b'numberOfCores	4 \n',
                     b'mummerDirectory	/home/james/pan_genome/PanPredic/MUMmer3.23/ \n',
                     b'blastDirectory	/home/james/pan_genome/PanPredic/ncbi-blast-2.6.0+/bin/ \n',
@@ -36,7 +36,7 @@ def gen_match(genome_files):
                     b'novelRegionFinderMode	no_duplicates \n',
                     b'fragmentationSize	500 \n',
                     b'percentIdentityCutoff	90 \n',
-                    b'coreGenomeThreshold   10000000',
+                    b'coreGenomeThreshold   10000000 \n',
                     b'runMode	pan \n',
                     b'nameOrId	id \n',
                     b'overwrite 1 \n'])

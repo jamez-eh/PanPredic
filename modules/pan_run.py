@@ -9,7 +9,7 @@ args = 'perl lib/panseq.pl settings.txt'
 def panseq(query_dict):
 
     novel_config = query_dict['novel']
-    match_config = query_dict['match']
+    match_config = str(query_dict['match'])
 
     #run panseq to find novel pangenome regions
     #novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", novel_config], stdout=sys.stdout)
@@ -19,7 +19,7 @@ def panseq(query_dict):
     #join_files(ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta', match_config)
 
     #finds a full set of pangenome regions for the queried genomes
-    match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", "/home/james/backend/app/modules/PanPredic/panseq_match_pangenome.conf"], stdout=sys.stdout)
+    match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", match_config], stdout=sys.stdout)
     match.communicate()
 
 
