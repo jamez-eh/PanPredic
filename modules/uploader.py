@@ -121,7 +121,7 @@ def merge_dicts(pan_dict, seq_dict):
         for panregion in pan_dict[record]:
             for header in seq_dict:
                 if header == panregion['PAN_ID']:
-                    panregion['DNAseq'] = seq_dict[header]
+                    panregion['DNASeq'] = seq_dict[header]
                     print(panregion)
     return {'PanGenomeRegion': pan_dict}
 
