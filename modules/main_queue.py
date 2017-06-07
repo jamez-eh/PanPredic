@@ -1,6 +1,7 @@
 import modules.pan_run
 import modules.uploader
 import modules.conf_gen
+from definitions import PAN_RESULTS, NOVEL_RESULTS
 
 def pan(args_dict):
 
@@ -11,7 +12,7 @@ def pan(args_dict):
     modules.pan_run.panseq(query_dict)
 
     # (3) Parse panseq results
-    results_pickle = modules.uploader.workflow('/home/james/backend/app/modules/PanPredic/tests/data/panResults/pan_genome.txt', '/home/james/backend/app/modules/PanPredic/tests/data/panResults/panGenome.fasta')
+    results_pickle = modules.uploader.workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/coreGenomeFragments.fasta')
 
     # (4) upload pan data to blazegraph
 

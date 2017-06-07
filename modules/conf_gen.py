@@ -36,7 +36,7 @@ def gen_match(genome_files):
                     b'novelRegionFinderMode	no_duplicates \n',
                     b'fragmentationSize	500 \n',
                     b'percentIdentityCutoff	90 \n',
-                    b'coreGenomeThreshold   10000000 \n',
+                    b'coreGenomeThreshold   1 \n',
                     b'runMode	pan \n',
                     b'nameOrId	id \n',
                     b'overwrite 1 \n'])

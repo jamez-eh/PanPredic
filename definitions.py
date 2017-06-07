@@ -10,5 +10,5 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 LOGGER_CONFIG = os.path.join(ROOT_DIR, 'logging.conf')
 DATA_DIR = os.path.join(ROOT_DIR, 'Data/')
 
-PAN_RESULTS = ROOT_DIR + '/modules/PanPredic/panResults'
-NOVEL_RESULTS = ROOT_DIR + '/modules/PanPredic/novelResults'
+PAN_RESULTS = ROOT_DIR + '/tests/data/panResults'
+NOVEL_RESULTS = ROOT_DIR + '/tests/data/novelResults'

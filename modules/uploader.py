@@ -46,7 +46,7 @@ def parse_pan(file):
     chunksize = 10 ** 6
     for chunk in pd.read_csv(file, sep=None, chunksize=chunksize):
     #drop columns we don't need
-        chunk = chunk.drop(['LocusID', 'Allele'], axis=1)
+        chunk = chunk.drop(['Allele'], axis=1)
     #drop rows we don't need
         chunk = chunk.dropna(axis=0, how='any')
 
@@ -84,12 +84,12 @@ def pan_to_dict(file):
 
         #the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
         #The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
-
         row_dict['GENE_NAME'] = pan_list[0]
-        row_dict['GENOME'] = pan_list[1]
-        row_dict['START'] = pan_list[2]
-        row_dict['STOP'] = pan_list[3]
-        contig_name = contig_name_parse(pan_list[4])
+        row_dict['PAN_ID'] = 'lcl|' + str(pan_list[0]) + '|' + pan_list[1]
+        row_dict['GENOME'] = pan_list[2]
+        row_dict['START'] = pan_list[3]
+        row_dict['STOP'] = pan_list[4]
+        contig_name = contig_name_parse(pan_list[5])
 
         if contig_name in pan_dict:
             pan_dict[contig_name].append(row_dict)
@@ -111,7 +111,7 @@ def get_sequence_dict(file):
     sequence_dict = {}
     for record in SeqIO.parse(file, "fasta"):
         sequence_dict[record.description] = str(record.seq)
-
+    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/seq_dict.json', sequence_dict)
     return sequence_dict
 
 #merges sequence data for storage in blazegraph
@@ -120,8 +120,9 @@ def merge_dicts(pan_dict, seq_dict):
     for record in pan_dict:
         for panregion in pan_dict[record]:
             for header in seq_dict:
-                if header == panregion['GENE_NAME']:
+                if header == panregion['PAN_ID']:
                     panregion['DNAseq'] = seq_dict[header]
+                    print(panregion)
     return {'PanGenomeRegion': pan_dict}
 
 
@@ -210,7 +211,7 @@ def workflow(pan_file, seq_file):
 
 
 
-#workflow('/home/james/GenbankData/pan_genome.txt', '/home/james/GenbankData/pangenome_fragments.fasta')
+workflow('/home/james/backend/app/modules/PanPredic/tests/data/panResults/pan_genome.txt', '/home/james/backend/app/modules/PanPredic/tests/data/panResults/coreGenomeFragments.fasta')
 '''
 dict = {'PanGenomeRegions':{'contig1':[{'START':500,'STOP':600,'GENE_NAME':'beaver', 'LocusID':5}, {'START':200,'STOP':300,'GENE_NAME':'rusty'}], 'contig2': [{'START':900,'STOP':1000,'GENE_NAME':'lucky', 'LocusId':10}]}}
 seq_dict = {'contig1':'abc', 'contig2':'def'}
