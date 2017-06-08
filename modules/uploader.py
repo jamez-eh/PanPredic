@@ -29,6 +29,9 @@ def contig_name_parse(pan_contig):
         m = re.search('(?<=\|).+', pan_contig)
         m = re.search('(?<=\|).+', m.group(0))
 
+    else:
+        return pan_contig
+
     return m.group(0)
 
 
@@ -80,7 +83,7 @@ def pan_to_dict(file, hash_dict):
 
         #the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
         #The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
-        row_dict['GENE_NAME'] = pan_list[0]
+        row_dict['GENE_NAME'] = str(pan_list[0])
         row_dict['PAN_ID'] = 'lcl|' + str(pan_list[0]) + '|' + pan_list[1]
         row_dict['START'] = pan_list[3]
         row_dict['STOP'] = pan_list[4]
@@ -201,7 +204,7 @@ def hash_merge(hash_dict, pan_dict):
 
 def workflow(pan_file, seq_file, query_files):
 
-    pickle_file = ROOT_DIR + '/results_pickle.p'
+
     hash_dict = app.modules.PanPredic.modules.grapher.get_URIs(query_files)
     parsed_file = parse_pan(pan_file)
     pan_dict = pan_to_dict(parsed_file, hash_dict)

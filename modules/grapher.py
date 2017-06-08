@@ -94,8 +94,9 @@ def get_URIs(dir):
 def create_graph(dict):
 
     graph = generate_graph()
-    for genomeURI in dict:
-        graph = parse_gene_dict(graph, dict[genomeURI], genomeURI, 'PanGenomeRegion')
+    for region in dict:
+        for genomeURI in dict[region]:
+            graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
 
     return graph
 
