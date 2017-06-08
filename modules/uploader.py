@@ -7,9 +7,8 @@ import pandas as pd
 import json
 import re
 from app.modules.PanPredic.definitions import ROOT_DIR
-import app.modules.PanPredic.modules.grapher as grapher
 import pickle
-from app.modules.PanPredic.modules.grapher import get_URIs
+import app.modules.PanPredic.modules.grapher
 
 
 
@@ -26,7 +25,7 @@ def contig_name_parse(pan_contig):
         m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
         m = re.search('(?<=\|).+', m.group(0))
 
-    else:
+    elif re.search('(?<=\|).+', pan_contig):
         m = re.search('(?<=\|).+', pan_contig)
         m = re.search('(?<=\|).+', m.group(0))
 
@@ -123,12 +122,13 @@ def get_sequence_dict(file):
     json_dump('/home/james/backend/app/modules/PanPredic/tests/data/seq_dict.json', sequence_dict)
     return sequence_dict
 
+
 #merges sequence data for storage in blazegraph
 def merge_dicts(pan_dict, seq_dict):
 
     for genome in pan_dict:
         for record in pan_dict[genome]:
-            for panregion in pan_dict[record]:
+            for panregion in pan_dict[genome][record]:
                 for header in seq_dict:
                     if header == panregion['PAN_ID']:
                         panregion['DNASequence'] = seq_dict[header]
@@ -199,35 +199,16 @@ def hash_merge(hash_dict, pan_dict):
 
 
 
-'''
-gd = app.modules.turtleGrapher.turtle_grapher.generate_turtle_skeleton(sys.argv[1])
-data = gd.serialize(format="turtle")
-print(data)
-'''
-
 def workflow(pan_file, seq_file, query_files):
 
     pickle_file = ROOT_DIR + '/results_pickle.p'
-    hash_dict = get_URIs(query_files)
+    hash_dict = app.modules.PanPredic.modules.grapher.get_URIs(query_files)
     parsed_file = parse_pan(pan_file)
     pan_dict = pan_to_dict(parsed_file, hash_dict)
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
-    #hash_dict = main(query_files)
-    #results_dict = hash_merge(hash_dict, final_dict)
-    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/results_dict.json', final_dict)
+
 
     return final_dict
 
 
-
-
-#workflow('/home/james/backend/app/modules/PanPredic/tests/data/panResults/pan_genome.txt', '/home/james/backend/app/modules/PanPredic/tests/data/panResults/coreGenomeFragments.fasta')
-'''
-dict = {'PanGenomeRegions':{'contig1':[{'START':500,'STOP':600,'GENE_NAME':'beaver', 'LocusID':5}, {'START':200,'STOP':300,'GENE_NAME':'rusty'}], 'contig2': [{'START':900,'STOP':1000,'GENE_NAME':'lucky', 'LocusId':10}]}}
-seq_dict = {'contig1':'abc', 'contig2':'def'}
-
-merge_dicts(dict, seq_dict)
-
-pickle.dump(dict, open(ROOT_DIR + '/results_pickle.p', 'wb'), protocol=2)
-'''

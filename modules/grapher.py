@@ -5,6 +5,7 @@ from Bio import SeqIO
 import app.modules.PanPredic.modules.uploader
 from app.modules.turtleGrapher.datastruct_savvy import parse_gene_dict
 from app.modules.turtleGrapher.turtle_grapher import generate_graph
+from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 
 #generates a hash for a file
 def generate_hash(filename):
@@ -85,7 +86,8 @@ def get_URIs(dir):
     for file in os.listdir(dir):
         header = get_fasta_header_from_file(dir + '/' + file)
         genome_name = get_genome_name(header)
-        hash_dict[genome_name] = '<https://www.github.com/superphy#' + generate_hash(dir + '/' + file)
+        hash = generate_hash(dir + '/' + file)
+        hash_dict[genome_name] = gu(':' + hash)
 
     return hash_dict
 
@@ -95,5 +97,6 @@ def create_graph(dict):
     for genomeURI in dict:
         graph = parse_gene_dict(graph, dict[genomeURI], genomeURI, 'PanGenomeRegion')
 
+    return graph
 
 
