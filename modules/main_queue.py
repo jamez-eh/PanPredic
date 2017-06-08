@@ -5,23 +5,24 @@ from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
 
 def pan(args_dict):
 
+    query_files = args_dict['i']
+
     # (1) generate conf files
-    query_dict = generate_conf(args_dict['i'])
+    query_dict = generate_conf(query_files)
 
     # (2) run panseq
     panseq(query_dict)
 
     # (3) Parse panseq results
-    results_pickle = workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/coreGenomeFragments.fasta')
+    results_pickle = workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/accessoryGenomeFragments.fasta', query_files)
 
     return results_pickle
 
     # (4) upload pan data to blazegraph
 
     # (5) analyze pan data
-'''
+
 dict = {}
-dict['genomes'] = '/home/james/backend/app/modules/PanPredic/tests/data/filteredgenomes'
+dict['i'] = '/home/james/backend/app/modules/PanPredic/tests/data/filteredgenomes'
 
 pan(dict)
-'''
