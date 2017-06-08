@@ -1,8 +1,9 @@
 from app.modules.PanPredic.modules.pan_run import panseq
-from app.modules.PanPredic.modules.uploader import workflow
+from app.modules.PanPredic.modules.uploader import workflow, json_dump
 from app.modules.PanPredic.modules.conf_gen import generate_conf
 from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
 from app.modules.PanPredic.modules.grapher import create_graph
+
 
 
 def pan(args_dict):
@@ -18,6 +19,7 @@ def pan(args_dict):
     # (3) Parse panseq results
     results_dict= workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/accessoryGenomeFragments.fasta', query_files)
 
+    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/json_dumperoo.json', results_dict)
     # (4) create graph
     graph = create_graph(results_dict)
 
