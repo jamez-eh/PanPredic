@@ -2,6 +2,8 @@ from app.modules.PanPredic.modules.pan_run import panseq
 from app.modules.PanPredic.modules.uploader import workflow
 from app.modules.PanPredic.modules.conf_gen import generate_conf
 from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
+from app.modules.PanPredic.modules.grapher import generate_graph
+
 
 def pan(args_dict):
 
@@ -18,8 +20,8 @@ def pan(args_dict):
 
     return results_pickle
 
-    # (4) upload pan data to blazegraph
-
+    # (4) create graph
+    generate_graph()
     # (5) analyze pan data
 
 dict = {}

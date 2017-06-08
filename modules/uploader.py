@@ -6,9 +6,10 @@ import sys
 import pandas as pd
 import json
 import re
-from definitions import ROOT_DIR
+from app.modules.PanPredic.definitions import ROOT_DIR
+import app.modules.PanPredic.modules.grapher as grapher
 import pickle
-
+from app.modules.PanPredic.modules.grapher import get_URIs
 
 
 
@@ -56,7 +57,7 @@ def parse_pan(file):
 
 
 #turn a datafarame to a list of rows lists
-def pan_to_dict(file):
+def pan_to_dict(file, hash_dict):
 
     """
     :param:
@@ -71,33 +72,41 @@ def pan_to_dict(file):
     i = 0
     prev_ID = None
     pan_dict = {}
+    genome_dict = {}
+
     for row in df.iterrows():
         index, data = row
         pan_list = data.tolist()
         row_dict = {}
 
-        entry_list = []
-
-        if prev_ID != pan_list[0]:
-            prev_ID = pan_list[0]
-            i = i + 1
-
         #the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
         #The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
         row_dict['GENE_NAME'] = pan_list[0]
         row_dict['PAN_ID'] = 'lcl|' + str(pan_list[0]) + '|' + pan_list[1]
-        row_dict['GENOME'] = pan_list[2]
         row_dict['START'] = pan_list[3]
         row_dict['STOP'] = pan_list[4]
+
+        #parse name to accession number
         contig_name = contig_name_parse(pan_list[5])
 
-        if contig_name in pan_dict:
-            pan_dict[contig_name].append(row_dict)
+        genome = pan_list[2]
 
+        #replace genome name with genome URI
+        if genome in hash_dict:
+            genome = hash_dict[genome]
+
+        if genome in genome_dict:
+
+            if contig_name in genome_dict[genome]:
+                genome_dict[genome][contig_name].append(row_dict)
+
+            else:
+                genome_dict[genome][contig_name] = [row_dict]
         else:
-            pan_dict[contig_name] = [row_dict]
+            genome_dict[genome] = {contig_name: []}
+            genome_dict[genome][contig_name] = [row_dict]
 
-    return pan_dict
+    return genome_dict
 
 
 def get_sequence_dict(file):
@@ -117,12 +126,12 @@ def get_sequence_dict(file):
 #merges sequence data for storage in blazegraph
 def merge_dicts(pan_dict, seq_dict):
 
-    for record in pan_dict:
-        for panregion in pan_dict[record]:
-            for header in seq_dict:
-                if header == panregion['PAN_ID']:
-                    panregion['DNASequence'] = seq_dict[header]
-                    print(panregion)
+    for genome in pan_dict:
+        for record in pan_dict[genome]:
+            for panregion in pan_dict[record]:
+                for header in seq_dict:
+                    if header == panregion['PAN_ID']:
+                        panregion['DNASequence'] = seq_dict[header]
     return {'PanGenomeRegion': pan_dict}
 
 
@@ -168,8 +177,8 @@ def main(dr):
     from Bio import SeqIO
     d = {}
     for f in os.listdir(dr):
-        h = generate_hash(dr + f)
-        for record in SeqIO.parse(open(dr + f), "fasta"):
+        h = generate_hash(dr + '/' + f)
+        for record in SeqIO.parse(open(dr + '/' + f), "fasta"):
             contig_name = contig_name_parse(record.id)
             d[contig_name] = '<https://www.github.com/superphy#' + h + '/contigs/' + contig_name + '>'
     json_dump('hash_dict.json', d)
@@ -179,9 +188,11 @@ def main(dr):
 def hash_merge(hash_dict, pan_dict):
 
     for contig in pan_dict:
-        print(contig)
         pan_dict[hash_dict[contig]] = pan_dict[contig]
         del pan_dict[contig]
+
+
+    return pan_dict
 
     json_dump('merged.json', pan_dict)
 
@@ -194,24 +205,24 @@ data = gd.serialize(format="turtle")
 print(data)
 '''
 
-def workflow(pan_file, seq_file):
+def workflow(pan_file, seq_file, query_files):
 
     pickle_file = ROOT_DIR + '/results_pickle.p'
-
+    hash_dict = get_URIs(query_files)
     parsed_file = parse_pan(pan_file)
-    pan_dict = pan_to_dict(parsed_file)
+    pan_dict = pan_to_dict(parsed_file, hash_dict)
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
     #hash_dict = main(query_files)
     #results_dict = hash_merge(hash_dict, final_dict)
     json_dump('/home/james/backend/app/modules/PanPredic/tests/data/results_dict.json', final_dict)
 
-    return pickle.dump(final_dict, open(pickle_file,'wb'), protocol=2)
+    return final_dict
 
 
 
 
-workflow('/home/james/backend/app/modules/PanPredic/tests/data/panResults/pan_genome.txt', '/home/james/backend/app/modules/PanPredic/tests/data/panResults/coreGenomeFragments.fasta')
+#workflow('/home/james/backend/app/modules/PanPredic/tests/data/panResults/pan_genome.txt', '/home/james/backend/app/modules/PanPredic/tests/data/panResults/coreGenomeFragments.fasta')
 '''
 dict = {'PanGenomeRegions':{'contig1':[{'START':500,'STOP':600,'GENE_NAME':'beaver', 'LocusID':5}, {'START':200,'STOP':300,'GENE_NAME':'rusty'}], 'contig2': [{'START':900,'STOP':1000,'GENE_NAME':'lucky', 'LocusId':10}]}}
 seq_dict = {'contig1':'abc', 'contig2':'def'}

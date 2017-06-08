@@ -1,4 +1,4 @@
-from definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS
+from app.modules.PanPredic.definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS
 
 
 
@@ -36,7 +36,7 @@ def gen_match(genome_files):
                     b'novelRegionFinderMode	no_duplicates \n',
                     b'fragmentationSize	500 \n',
                     b'percentIdentityCutoff	90 \n',
-                    b'coreGenomeThreshold   1 \n',
+                    b'coreGenomeThreshold   1000000000 \n',
                     b'runMode	pan \n',
                     b'nameOrId	id \n',
                     b'overwrite 1 \n'])

@@ -1,7 +1,7 @@
 import subprocess
 import sys
 import shutil
-from definitions import ROOT_DIR
+from app.modules.PanPredic.definitions import ROOT_DIR
 
 
 args = 'perl lib/panseq.pl settings.txt'
