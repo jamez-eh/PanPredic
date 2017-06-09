@@ -97,6 +97,13 @@ def create_graph(dict):
     for region in dict:
         for genomeURI in dict[region]:
             graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
+            data = graph.serialize(format="turtle")
+            with open('/home/james/backend/app/modules/PanPredic/tests/data/panregions.ttl', 'a+') as f:
+                f.write(data)
+                #TODO: find a better way to make graph empty
+            graph = generate_graph()
+
+
 
     return graph
 

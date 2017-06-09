@@ -33,7 +33,7 @@ def pan(args_dict):
     data = graph.serialize(format="turtle")
     print(data)
 
-
+'''
 dict = {}
 dict['i'] = '/home/james/backend/app/modules/PanPredic/tests/data/filteredgenomes'
 
@@ -42,5 +42,4 @@ pan(dict)
 
 results_dict = pickle.load(open(ROOT_DIR + '/results_pickle.p', 'rb'))
 
-graph = create_graph(dict)
-'''
+graph = create_graph(results_dict)
