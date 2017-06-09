@@ -6,6 +6,8 @@ import app.modules.PanPredic.modules.uploader
 from app.modules.turtleGrapher.datastruct_savvy import parse_gene_dict
 from app.modules.turtleGrapher.turtle_grapher import generate_graph
 from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
+from app.modules.PanPredic.definitions import ROOT_DIR
+from app.modules.blazeUploader import upload_graph
 
 #generates a hash for a file
 def generate_hash(filename):
@@ -97,14 +99,15 @@ def create_graph(dict):
     for region in dict:
         for genomeURI in dict[region]:
             graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
+            upload_graph.upload_graph(graph)
             data = graph.serialize(format="turtle")
-            with open('/home/james/backend/app/modules/PanPredic/tests/data/panregions.ttl', 'a+') as f:
+            with open(ROOT_DIR + '/tests/data/panregions.ttl', 'a+') as f:
                 f.write(data)
                 #TODO: find a better way to make graph empty
             graph = generate_graph()
 
 
 
-    return graph
+    return ROOT_DIR + '/tests/data/panregions.ttl'
 
 
