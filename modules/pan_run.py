@@ -47,20 +47,3 @@ def join_files(file1, file2):
 
 
 
-#queries database and builds a pangenome
-def build_pan():
-    g = rdflib.Graph()
-
-    # ... add some triples to g somehow ...
-    g.parse("some_foaf_file.rdf")
-
-    qres = g.query(
-        """SELECT DISTINCT ?aname ?bname
-           WHERE {
-              ?a foaf:knows ?b .
-              ?a foaf:name ?aname .
-              ?b foaf:name ?bname .
-           }""")
-
-    for row in qres:
-        print("%s knows %s" % row)
