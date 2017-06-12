@@ -98,6 +98,7 @@ def create_graph(dict):
     graph = generate_graph()
     for region in dict:
         for genomeURI in dict[region]:
+
             graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
             upload_graph.upload_graph(graph)
             data = graph.serialize(format="turtle")

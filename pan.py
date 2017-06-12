@@ -20,7 +20,6 @@ def pan(args_dict):
     # (2) run panseq
     panseq(query_dict)
 
-    print('here')
     # (3) Parse panseq results
     results_dict= workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/accessoryGenomeFragments.fasta', query_files)
 

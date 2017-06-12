@@ -1,7 +1,9 @@
 import subprocess
+import rdflib
 import sys
 import shutil
 from app.modules.PanPredic.definitions import ROOT_DIR
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 args = 'perl lib/panseq.pl settings.txt'
@@ -44,3 +46,21 @@ def join_files(file1, file2):
     first.close()
 
 
+
+#queries database and builds a pangenome
+def build_pan():
+    g = rdflib.Graph()
+
+    # ... add some triples to g somehow ...
+    g.parse("some_foaf_file.rdf")
+
+    qres = g.query(
+        """SELECT DISTINCT ?aname ?bname
+           WHERE {
+              ?a foaf:knows ?b .
+              ?a foaf:name ?aname .
+              ?b foaf:name ?bname .
+           }""")
+
+    for row in qres:
+        print("%s knows %s" % row)

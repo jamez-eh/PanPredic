@@ -20,14 +20,16 @@ def contig_name_parse(pan_contig):
     :return: 
         the basename of the contig
     """
+    pan_contig = re.sub('[|]', '', pan_contig)
 
-    if re.search('(?<=\|)(.*?)(?=_E)', pan_contig):
-        m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
-        m = re.search('(?<=\|).+', m.group(0))
+    if re.search('(.*?)(?=_E)', pan_contig):
+        #m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+        m = re.search('(.*?)(?=_E)', pan_contig)
+        #m = re.search('(?<=\|).+', m.group(0))
 
-    elif re.search('(?<=\|).+', pan_contig):
-        m = re.search('(?<=\|).+', pan_contig)
-        m = re.search('(?<=\|).+', m.group(0))
+    #elif re.search('(?<=\|).+', pan_contig):
+        #m = re.search('(?<=\|).+', pan_contig)
+        #m = re.search('(?<=\|).+', m.group(0))
 
     else:
         return pan_contig
