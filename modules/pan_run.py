@@ -46,4 +46,30 @@ def join_files(file1, file2):
     first.close()
 
 
+#builds a pangenome by querying blazegraph
+def build_pan(pan_list):
+    """
+    :param :
+       pangenome as a list 
+    :return: 
+        the complete pangenome as a fasta file 
+    """
+    i = 1
+    for entry in pan_list:
+        if i % 2 != 0:
+            first = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
+            first.write('>' + entry)
+        else:
+            first = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
+            first.write(entry)
+        first.close()
+        i = i + 1
+
+
+
+
+
+
+
+
 

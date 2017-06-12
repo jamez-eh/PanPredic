@@ -1,14 +1,10 @@
 import config
 from os import path
 import sys
-import rdflib
 sys.path.append(path.abspath('/home/james/backend/app/'))
 from app.modules.groupComparisons.decorators import submit, tolist, prefix
-from app.modules.turtleGrapher.turtle_utils import link_uris as gu
 
 
-
-blazegraph_url = config.database['blazegraph_url']
 
 #queries database and builds a pangenome
 @tolist
@@ -28,6 +24,4 @@ def query_panseq():
     return query
 
 
-
-list = query_panseq()
 
