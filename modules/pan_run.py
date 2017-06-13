@@ -1,16 +1,13 @@
 import subprocess
-import rdflib
 import sys
 import shutil
 from app.modules.PanPredic.definitions import ROOT_DIR
-from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 args = 'perl lib/panseq.pl settings.txt'
 
 def panseq(query_dict):
 
-    novel_config = query_dict['novel']
     match_config = str(query_dict['match'])
 
     #run panseq to find novel pangenome regions
@@ -57,14 +54,14 @@ def build_pan(pan_list):
     i = 1
     for entry in pan_list:
         if i % 2 != 0:
-            first = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
-            first.write('>' + entry)
+            f = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
+            f.write('>' + entry + '\n')
         else:
-            first = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
-            first.write(entry)
-        first.close()
+            f = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
+            f.write(entry + '\n')
+        f.close()
         i = i + 1
-
+    return f
 
 
 

@@ -5,6 +5,7 @@ from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
 from app.modules.PanPredic.modules.grapher import create_graph
 from app.modules.PanPredic.definitions import ROOT_DIR
 import pickle
+from app.modules.PanPredic.modules.queries import query_panseq
 
 
 
