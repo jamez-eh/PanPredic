@@ -22,6 +22,7 @@ def query_panseq():
        
     }}
     """
+    return query
 
 # gets pangenomeregions for a single genome
 @tolist
