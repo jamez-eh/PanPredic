@@ -24,4 +24,6 @@ def query_panseq():
     return query
 
 
+#query the entire pangenome and get
+
 
