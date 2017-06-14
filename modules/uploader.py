@@ -9,7 +9,7 @@ import re
 from app.modules.PanPredic.definitions import ROOT_DIR
 import pickle
 import app.modules.PanPredic.modules.grapher
-
+from app.modules.PanPredic.modules.queries import query_panseq
 
 
 def contig_name_parse(pan_contig):
@@ -73,9 +73,11 @@ def pan_to_dict(file, hash_dict):
     df = pd.read_csv(file, sep=None)
     os.remove(file)
 
-    i = 0
-    prev_ID = None
-    pan_dict = {}
+    #used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
+    if query_panseq():
+        previous_pan = True
+
+
     genome_dict = {}
 
     for row in df.iterrows():
@@ -85,7 +87,13 @@ def pan_to_dict(file, hash_dict):
 
         #the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
         #The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
-        row_dict['GENE_NAME'] = str(pan_list[0])
+
+        if previous_pan:
+            row_dict['GENE_NAME'] = resolve_locus(pan_list[1])
+
+        else:
+            row_dict['GENE_NAME'] = str(pan_list[0])
+
         row_dict['PAN_ID'] = 'lcl|' + str(pan_list[0]) + '|' + pan_list[1]
         row_dict['START'] = pan_list[3]
         row_dict['STOP'] = pan_list[4]
@@ -170,23 +178,6 @@ def generate_hash(filename):
         return sha1(str(sorted(f.readlines())).encode('utf-8')).hexdigest()
 
 
-def main(dr):
-
-    """
-    :param:
-        directory of fasta files
-    :return: 
-        Dictionary in format {contig_name: sha1hash} for each contig in fasta files
-    """
-
-    from Bio import SeqIO
-    d = {}
-    for f in os.listdir(dr):
-        h = generate_hash(dr + '/' + f)
-        for record in SeqIO.parse(open(dr + '/' + f), "fasta"):
-            contig_name = contig_name_parse(record.id)
-            d[contig_name] = '<https://www.github.com/superphy#' + h + '/contigs/' + contig_name + '>'
-    json_dump('hash_dict.json', d)
 
 
 #replaces contig names from panseq with those compatible with blazegraph
@@ -201,6 +192,13 @@ def hash_merge(hash_dict, pan_dict):
 
     json_dump('merged.json', pan_dict)
 
+
+#parses the locus name for the locusId when we are adding additional pan genome regions to the db
+def resolve_locus(locus):
+
+
+        m = re.search('(?<=phy_)(.*?)(?=_\()', locus)
+        return m.group(0)
 
 
 

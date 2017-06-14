@@ -54,10 +54,10 @@ def build_pan(pan_list):
     i = 1
     for entry in pan_list:
         if i % 2 != 0:
-            f = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
+            f = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a")
             f.write('>' + entry + '\n')
         else:
-            f = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a+")
+            f = open(ROOT_DIR + '/Data/PanGenomeRegions.fasta', "a")
             f.write(entry + '\n')
         f.close()
         i = i + 1
