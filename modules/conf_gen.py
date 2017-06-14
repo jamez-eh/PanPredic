@@ -1,5 +1,5 @@
 from app.modules.PanPredic.definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS
-from app.modules.PanPredic.modules.queries import query_panseq
+from app.modules.PanPredic.modules.queries import check_panseq
 from app.modules.PanPredic.modules.pan_run import build_pan
 
 
@@ -18,7 +18,7 @@ def gen_novel(genome_files):
                     b'blastDirectory	/home/james/pan_genome/ncbi-blast-2.6.0+/bin/ \n',
                     b'minimumNovelRegionSize	500 \n',
                     b'novelRegionFinderMode	no_duplicates \n',
-                    b'muscleExecutable	/home/james/pan_genome/PanPredic/muscle3.8.31_i86linux64 \n',
+                    b'muscleExecutable	/home/james/pan_genome/muscle3.8.31_i86linux64 \n',
                     b'percentIdentityCutoff	90 \n',
                     b'runMode	novel \n',
                     b'overwrite 1'])
@@ -43,11 +43,12 @@ def gen_match(genome_files):
                     b'nameOrId	id \n',
                     b'overwrite 1 \n']
 
-    pan_list = query_panseq()
+    pan_list = check_panseq()
+
 
     if pan_list:
         settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
-        build_pan(pan_list)
+
 
 
 

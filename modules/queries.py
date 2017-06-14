@@ -24,6 +24,25 @@ def query_panseq():
     """
     return query
 
+#used to check the presence of pangenome regions within blazegraph
+@tolist
+@submit
+@prefix
+def check_panseq():
+    '''
+    Grabs all objectids having the relation.
+    '''
+    query = """
+    SELECT ?p ?s WHERE {{
+          	?p a :PanGenomeRegion .
+   			?p g:DNASequence ?s .
+
+    }}
+    LIMIT 1
+    """
+    return query
+
+
 # gets pangenomeregions for a single genome
 @tolist
 @submit
