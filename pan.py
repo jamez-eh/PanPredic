@@ -5,8 +5,11 @@ from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
 from app.modules.PanPredic.modules.grapher import create_graph
 from app.modules.PanPredic.definitions import ROOT_DIR
 import pickle
-from app.modules.PanPredic.modules.queries import query_panseq
+from modules.loggingFunctions import initialize_logging
+import logging
 
+log_file = initialize_logging()
+log = logging.getLogger(__name__)
 
 
 def pan(args_dict):
@@ -17,17 +20,21 @@ def pan(args_dict):
 
     # (1) generate conf files
     query_dict = generate_conf(query_files)
+    log.debug('query dict:' + str(query_dict))
 
     # (2) run panseq
     panseq(query_dict)
+    log.debug('panseq finished')
 
     # (3) Parse panseq results
     results_dict= workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/accessoryGenomeFragments.fasta', query_files)
+    log.debug('panseq parsed:'+ str(results_dict))
 
-    pickle.dump(results_dict, open(pickle_file, 'wb'))
+    #pickle.dump(results_dict, open(pickle_file, 'wb'))
 
     # (4) create graph
     pan_turtle = create_graph(results_dict)
+    log.debug('graph finished: ' + str(pan_turtle))
 
     return pan_turtle
 

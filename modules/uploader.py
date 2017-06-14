@@ -74,6 +74,9 @@ def pan_to_dict(file, hash_dict):
     os.remove(file)
 
     #used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
+
+    previous_pan = False
+
     if query_panseq():
         previous_pan = True
 
@@ -88,6 +91,8 @@ def pan_to_dict(file, hash_dict):
         #the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
         #The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
 
+
+        #Because of how panseq names outputs we have an optional parse here, that if there is a queryfile for a previous pangenome then we must take the locusID from the locusName in pan_genome.txt
         if previous_pan:
             row_dict['GENE_NAME'] = resolve_locus(pan_list[1])
 
@@ -211,7 +216,7 @@ def workflow(pan_file, seq_file, query_files):
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
 
-
+    print('\nfinished workflow\n')
     return final_dict
 
 
