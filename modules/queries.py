@@ -14,11 +14,13 @@ from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 def query_panseq():
     '''
     Grabs all objectids having the relation.
+       			
     '''
     query = """
     SELECT ?p ?s WHERE {{
           	?p a :PanGenomeRegion .
-   			?p g:DNASequence ?s .
+          	?p g:DNASequence ?s .
+
        
     }}
     """
@@ -58,7 +60,6 @@ def get_pangenome(genome):
 
     }}
     """.format(genome = gu(genome))
-    print(query)
     return query
 
 
@@ -76,7 +77,6 @@ def get_genomes(pan):
 
     }}
     """.format(PanGenomeRegion = pan)
-    print(query)
     return query
 
 
@@ -94,5 +94,43 @@ def get_virulence(genome):
 
     }}
     """.format(genome = genome)
-    print(query)
+
+    return query
+
+
+
+@tolist
+@submit
+@prefix
+def get_sequences(seq):
+    '''
+    Grabs all objectids having the relation.
+    '''
+    query = """
+    SELECT ?p WHERE {{
+          	?p a :PanGenomeRegion .
+   			?p g:DNASequence '{seq}'.
+
+    }}
+    """.format(seq = seq)
+
+    return query
+
+#checks to see if a genome is in blazegraph
+@tolist
+@submit
+@prefix
+def check_genome(genome):
+    '''
+    Grabs all objectids having the relation.
+    '''
+    query = """
+    SELECT ?p WHERE {{
+          	<{genome}> (:hasPart|:isFoundIn) ?p .
+   			?p g:DNASequence '{genome}'.
+
+    }}
+    LIMIT 1
+    """.format(genome = gu(genome))
+
     return query
