@@ -103,13 +103,13 @@ def pan_to_dict(file, hash_dict):
         '''
         row_dict['GENE_NAME'] = str(pan_list[0])
 
-        row_dict['START'] = pan_list[3]
-        row_dict['STOP'] = pan_list[4]
+        row_dict['START'] = pan_list[2]
+        row_dict['STOP'] = pan_list[3]
 
         #parse name to accession number
-        contig_name = contig_name_parse(pan_list[5])
+        contig_name = contig_name_parse(pan_list[4])
 
-        genome = pan_list[2]
+        genome = pan_list[1]
 
         #replace genome name with genome URI
         if genome in hash_dict:

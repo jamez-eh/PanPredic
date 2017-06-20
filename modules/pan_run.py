@@ -26,7 +26,7 @@ def panseq(query_dict):
 
 
         #run panseq to find novel pangenome regions
-        novel = subprocess.Popen(["perl", "/home/james/Panseq2/lib/panseq.pl", novel_config], stdout=sys.stdout)
+        novel = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", novel_config], stdout=sys.stdout)
         novel.communicate()
         
         print('NOVEL REGIONS COUNT: \n')
@@ -39,7 +39,7 @@ def panseq(query_dict):
         print(sequence_counter(query_file))
 
     #finds a full set of pangenome regions for the queried genomes
-    match = subprocess.Popen(["perl", "/home/james/Panseq2/lib/panseq.pl", match_config], stdout=sys.stdout)
+    match = subprocess.Popen(["perl", "/home/james/Panseq/lib/panseq.pl", match_config], stdout=sys.stdout)
 
     match.communicate()
 
