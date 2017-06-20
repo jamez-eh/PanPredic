@@ -6,7 +6,7 @@ from app.modules.groupComparisons.decorators import submit, tolist, prefix, todi
 from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 
 
-
+#TODO: Refactor queries so there are fewer of them and they accept arguments
 #queries database and builds a pangenome
 
 
@@ -154,5 +154,22 @@ def check_genome(genome):
     }}
     LIMIT 1
     """.format(genome = gu(genome))
+
+    return query
+
+
+@todict
+@submit
+@prefix
+def get_virulence():
+
+    query = """
+    SELECT ?g ?p WHERE {{
+          	?p a :VirulenceFactor .
+          	?g a g:Genome
+   			?p :isFoundIn ?g.
+
+    }}
+    """
 
     return query
