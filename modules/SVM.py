@@ -1,6 +1,6 @@
 from sklearn import datasets
 from sklearn import svm
-from app.modules.PanPredic.modules.queries import gen_pan, pan_names, get_virulence
+from app.modules.PanPredic.modules.queries import gen_pan, pan_names, get_virulence, vir_names
 '''
 digits = datasets.load_digits()
 print('all')
@@ -11,17 +11,10 @@ print(digits.data)
 print('labels: ')
 print(digits.target)
 
-clf = svm.SVC()
 
-clf = svm.SVC(gamma=0.001, C=100)
-
-X,y = digits.data[:-10], digits.target[:-10]
-
-#train
-clf.fit(X,y)
 
 #predict using model called clf
-print(clf.predict(digits.data[-5]))
+
 '''
 
 #ideas to make this better -> use pandas dataframes, first get list of genomes and then for each genome query ->store in file and merge results, use memmaps or mmaps (memmaps lets us store in lists, which is what svm takes)
@@ -33,7 +26,7 @@ def get_data():
     gen_panreg = gen_pan()
     pan_genome = pan_names()
 
-    return gen_panreg, pan_genome
+    return eval_vectors(gen_panreg, pan_genome)
 
 
 #make a vector of 1's and 0's for each genome so that we can see presence or absence of pangenome regions
@@ -69,6 +62,44 @@ def get_labels():
     '''
 
     vir = get_virulence()
+    names = vir_names()
 
-    return vir
+    return eval_vectors(vir, names)
 
+
+def get_vectors():
+    '''
+    
+    :return: X and y vectors for svm training
+    '''
+
+    X = []
+    y = []
+
+
+    pans = get_data()
+    virs = get_labels()
+
+    for genome in pans:
+        X.append(pans[genome])
+        y.append(virs[genome][0])
+
+    print(X)
+    print(y)
+
+    return X, y
+
+
+def training(X, y):
+
+
+    clf = svm.SVC()
+
+    clf.fit(X,y)
+
+    print(clf.predict(X[1]))
+
+
+X, y = get_vectors()
+
+training(X, y)
