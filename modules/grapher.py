@@ -8,6 +8,7 @@ from app.modules.turtleGrapher.turtle_grapher import generate_graph
 from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 from app.modules.PanPredic.definitions import ROOT_DIR
 from app.modules.blazeUploader import upload_graph
+from app.modules.PanPredic.modules.queries import check_genome
 
 #generates a hash for a file
 def generate_hash(filename):
@@ -52,7 +53,7 @@ def get_genome_name(header):
         # Look for lcl followed by the possible genome name
         re.compile('((?<=lcl\|)[\w\-\.]+)'),
 
-        # Look for contigs in the wwwwdddddd format
+        # Look    for contigs in the wwwwdddddd format
         re.compile('([A-Za-z]{4}\d{2})\d{6}'),
 
         # Look for a possible genome name at the beginning of the record ID
@@ -98,17 +99,16 @@ def create_graph(dict):
     graph = generate_graph()
     for region in dict:
         for genomeURI in dict[region]:
+            if not check_genome(genomeURI):
+                graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
+                upload_graph.upload_graph(graph)
+                data = graph.serialize(format="turtle")
+                with open(ROOT_DIR + '/tests/data/panregions.ttl', 'a+') as f:
+                    f.write(data)
+                    #TODO: find a better way to make graph empty
+                graph = generate_graph()
 
-            graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
-            upload_graph.upload_graph(graph)
-            data = graph.serialize(format="turtle")
-            with open(ROOT_DIR + '/tests/data/panregions.ttl', 'a+') as f:
-                f.write(data)
-                #TODO: find a better way to make graph empty
-            graph = generate_graph()
 
 
-
-    return ROOT_DIR + '/tests/data/panregions.ttl'
 
 

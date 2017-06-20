@@ -10,7 +10,7 @@ from app.modules.PanPredic.definitions import ROOT_DIR
 import pickle
 import app.modules.PanPredic.modules.grapher
 from app.modules.PanPredic.modules.queries import query_panseq
-
+from hashlib import sha1
 
 def contig_name_parse(pan_contig):
     """
@@ -51,7 +51,7 @@ def parse_pan(file):
     chunksize = 10 ** 6
     for chunk in pd.read_csv(file, sep=None, chunksize=chunksize):
     #drop columns we don't need
-        chunk = chunk.drop(['Allele'], axis=1)
+        chunk = chunk.drop(['LocusName', 'Allele'], axis=1)
     #drop rows we don't need
         chunk = chunk.dropna(axis=0, how='any')
 
@@ -74,13 +74,14 @@ def pan_to_dict(file, hash_dict):
     os.remove(file)
 
     #used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
-
+    '''
     previous_pan = False
 
-    if query_panseq():
+    if query_panseq(): 
+
         previous_pan = True
 
-
+    '''
     genome_dict = {}
 
     for row in df.iterrows():
@@ -93,13 +94,15 @@ def pan_to_dict(file, hash_dict):
 
 
         #Because of how panseq names outputs we have an optional parse here, that if there is a queryfile for a previous pangenome then we must take the locusID from the locusName in pan_genome.txt
+        '''
         if previous_pan:
             row_dict['GENE_NAME'] = resolve_locus(pan_list[1])
 
         else:
-            row_dict['GENE_NAME'] = str(pan_list[0])
+    
+        '''
+        row_dict['GENE_NAME'] = str(pan_list[0])
 
-        row_dict['PAN_ID'] = 'lcl|' + str(pan_list[0]) + '|' + pan_list[1]
         row_dict['START'] = pan_list[3]
         row_dict['STOP'] = pan_list[4]
 
@@ -123,6 +126,7 @@ def pan_to_dict(file, hash_dict):
             genome_dict[genome] = {contig_name: []}
             genome_dict[genome][contig_name] = [row_dict]
 
+    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/pan_to_dict.json',genome_dict)
     return genome_dict
 
 
@@ -140,16 +144,21 @@ def get_sequence_dict(file):
     json_dump('/home/james/backend/app/modules/PanPredic/tests/data/seq_dict.json', sequence_dict)
     return sequence_dict
 
-
+#TODO: refactor this code so it is faster
 #merges sequence data for storage in blazegraph
 def merge_dicts(pan_dict, seq_dict):
-
+    number = 0
     for genome in pan_dict:
-        for record in pan_dict[genome]:
-            for panregion in pan_dict[genome][record]:
+        for contig in pan_dict[genome]:
+            for panregion in pan_dict[genome][contig]:
                 for header in seq_dict:
-                    if header == panregion['PAN_ID']:
+                    if header == panregion['GENE_NAME']:
                         panregion['DNASequence'] = seq_dict[header]
+                        #panregion['GENE_NAME'] = str(sha1(seq_dict[header].encode()).hexdigest())
+                        number = number + 1
+                        break
+    print(number)
+    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/merge_dicts.json',pan_dict)
     return {'PanGenomeRegion': pan_dict}
 
 
@@ -176,7 +185,7 @@ def generate_hash(filename):
         sha1 hash
     """
 
-    from hashlib import sha1
+
     # the 'b' isn't needed less you run this on Windows
     with open(filename, 'rb') as f:
     #  we apply a sort func to make sure the contents are the same,        # regardless of order
@@ -195,17 +204,18 @@ def hash_merge(hash_dict, pan_dict):
 
     return pan_dict
 
-    json_dump('merged.json', pan_dict)
+    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/merged.json', pan_dict)
 
 
 #parses the locus name for the locusId when we are adding additional pan genome regions to the db
 def resolve_locus(locus):
 
-
+    if re.search('(?<=phy_)(.*?)(?=_\()', locus):
         m = re.search('(?<=phy_)(.*?)(?=_\()', locus)
         return m.group(0)
 
-
+    else:
+        return locus
 
 def workflow(pan_file, seq_file, query_files):
 

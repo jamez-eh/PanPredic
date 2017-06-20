@@ -8,23 +8,7 @@ from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 
 
 #queries database and builds a pangenome
-@tolist
-@submit
-@prefix
-def query_panseq():
-    '''
-    Grabs all objectids having the relation.
-       			
-    '''
-    query = """
-    SELECT ?p ?s WHERE {{
-          	?p a :PanGenomeRegion .
-          	?p g:DNASequence ?s .
 
-       
-    }}
-    """
-    return query
 
 #used to check the presence of pangenome regions within blazegraph
 @tolist
@@ -32,7 +16,21 @@ def query_panseq():
 @prefix
 def check_panseq():
     '''
-    Grabs all objectids having the relation.
+    '''
+    query = """
+    SELECT ?p ?s WHERE {{
+          	?p a :PanGenomeRegion .
+
+    }}
+    LIMIT 1
+    """
+    return query
+
+@tolist
+@submit
+@prefix
+def query_panseq():
+    '''
     '''
     query = """
     SELECT ?p ?s WHERE {{
@@ -40,7 +38,36 @@ def check_panseq():
    			?p g:DNASequence ?s .
 
     }}
-    LIMIT 1
+    """
+    return query
+
+
+@tolist
+@submit
+@prefix
+def pan_names():
+    '''
+    '''
+    query = """
+    SELECT ?p ?s WHERE {{
+          	?p a :PanGenomeRegion .
+
+    }}
+
+    """
+    return query
+
+#returns a list of genomes and panregions:
+@tolist
+@submit
+@prefix
+def gen_pan():
+    query = """
+    SELECT ?g ?p WHERE {{
+            ?g a g:Genome .
+          	?p a :PanGenomeRegion .
+          	?p :isFoundIn ?g .
+    }}
     """
     return query
 
@@ -50,9 +77,7 @@ def check_panseq():
 @submit
 @prefix
 def get_pangenome(genome):
-    '''
-    Grabs all objectids having the relation.
-    '''
+
     query = """
     SELECT ?p WHERE {{
           	?p a :PanGenomeRegion .
@@ -63,13 +88,12 @@ def get_pangenome(genome):
     return query
 
 
+#gets genomes that a specific pan region belong to
 @tolist
 @submit
 @prefix
 def get_genomes(pan):
-    '''
-    Grabs all objectids having the relation.
-    '''
+
     query = """
     SELECT ?p WHERE {{
           	?p a g:Genome .
@@ -84,9 +108,7 @@ def get_genomes(pan):
 @submit
 @prefix
 def get_virulence(genome):
-    '''
-    Grabs all objectids having the relation.
-    '''
+
     query = """
     SELECT ?p WHERE {{
           	?p a :VirulenceFactor .
@@ -103,9 +125,7 @@ def get_virulence(genome):
 @submit
 @prefix
 def get_sequences(seq):
-    '''
-    Grabs all objectids having the relation.
-    '''
+
     query = """
     SELECT ?p WHERE {{
           	?p a :PanGenomeRegion .

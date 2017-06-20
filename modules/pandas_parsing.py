@@ -48,7 +48,7 @@ def dict_counter (file):
 #dict_counter('/home/james/backend/app/modules/PanPredic/tests/data/pan_to_dict.json')
 
 
-
+#makes a list of those in db that are not in our new file
 def comparison (new_dict):
     count = 0
     found = True
@@ -74,7 +74,7 @@ def comparison (new_dict):
 
 
 #comparison('/home/james/backend/app/modules/PanPredic/tests/data/merge_dicts.json')
-
+#checks our output file for the same sequences in the db
 def access_check():
     seq_dict = get_sequence_dict('/home/james/backend/app/modules/PanPredic/tests/data/panResults/accessoryGenomeFragments.fasta')
     sequence_count = 0

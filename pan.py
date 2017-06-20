@@ -8,6 +8,7 @@ import pickle
 from app.modules.loggingFunctions import initialize_logging
 import logging
 
+
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
@@ -33,10 +34,10 @@ def pan(args_dict):
     #pickle.dump(results_dict, open(pickle_file, 'wb'))
 
     # (4) create graph
-    pan_turtle = create_graph(results_dict)
-    log.debug('graph finished: ' + str(pan_turtle))
+    #create_graph(results_dict)
+    #log.debug('graph finished: ' + str(pan_turtle))
 
-    return pan_turtle
+    #return pan_turtle
 
 
 

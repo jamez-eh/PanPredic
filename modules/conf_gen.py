@@ -19,9 +19,11 @@ def gen_novel(genome_files):
                     b'minimumNovelRegionSize	500 \n',
                     b'novelRegionFinderMode	no_duplicates \n',
                     b'muscleExecutable	/home/james/pan_genome/muscle3.8.31_i86linux64 \n',
+                    b'fragmentationSize	500 \n',
                     b'percentIdentityCutoff	90 \n',
                     b'runMode	novel \n',
-                    b'overwrite 1'])
+                    b'overwrite 1 \n',
+                      b'sha1 1 \n'])
         return ROOT_DIR + '/panseq_novel_pangenome.conf'
 
 
@@ -41,14 +43,14 @@ def gen_match(genome_files):
                     b'coreGenomeThreshold   1000000000 \n',
                     b'runMode	pan \n',
                     b'nameOrId	id \n',
-                    b'overwrite 1 \n']
+                    b'overwrite 1 \n',
+                     b'sha1 1 \n']
 
     pan_list = check_panseq()
 
 
     if pan_list:
         settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
-
 
 
 
