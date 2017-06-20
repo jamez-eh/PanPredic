@@ -18,7 +18,7 @@ def check_panseq():
     '''
     '''
     query = """
-    SELECT ?p ?s WHERE {{
+    SELECT ?p WHERE {{
           	?p a :PanGenomeRegion .
 
     }}
@@ -49,7 +49,7 @@ def pan_names():
     '''
     '''
     query = """
-    SELECT ?p ?s WHERE {{
+    SELECT ?p  WHERE {{
           	?p a :PanGenomeRegion .
 
     }}
@@ -166,10 +166,25 @@ def get_virulence():
     query = """
     SELECT ?g ?p WHERE {{
           	?p a :VirulenceFactor .
-          	?g a g:Genome
-   			?p :isFoundIn ?g.
+          	?g a g:Genome .
+   			?p :isFoundIn ?g .
 
     }}
     """
 
+    return query
+
+@tolist
+@submit
+@prefix
+def vir_names():
+    '''
+    '''
+    query = """
+    SELECT ?p WHERE {{
+          	?p a :VirulenceFactor .
+
+    }}
+
+    """
     return query
