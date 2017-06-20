@@ -2,7 +2,7 @@ import config
 from os import path
 import sys
 sys.path.append(path.abspath('/home/james/backend/app/'))
-from app.modules.groupComparisons.decorators import submit, tolist, prefix
+from app.modules.groupComparisons.decorators import submit, tolist, prefix, todict
 from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 
 
@@ -58,7 +58,7 @@ def pan_names():
     return query
 
 #returns a list of genomes and panregions:
-@tolist
+@todict
 @submit
 @prefix
 def gen_pan():
@@ -136,7 +136,9 @@ def get_sequences(seq):
 
     return query
 
+
 #checks to see if a genome is in blazegraph
+
 @tolist
 @submit
 @prefix
