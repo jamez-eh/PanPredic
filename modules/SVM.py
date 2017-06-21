@@ -1,6 +1,7 @@
 from sklearn import datasets
 from sklearn import svm
 from app.modules.PanPredic.modules.queries import gen_pan, pan_names, get_virulence, vir_names
+import pickle
 '''
 digits = datasets.load_digits()
 print('all')
@@ -84,8 +85,10 @@ def get_vectors():
         X.append(pans[genome])
         y.append(virs[genome][0])
 
-    print(X)
+
     print(y)
+
+
 
     return X, y
 
@@ -97,9 +100,19 @@ def training(X, y):
 
     clf.fit(X,y)
 
-    print(clf.predict(X[1]))
+    yo = clf.predict(X[1])
+
+    print(yo)
 
 
-X, y = get_vectors()
 
-training(X, y)
+
+
+
+def prediction():
+
+    X, y = get_vectors()
+
+    training(X, y)
+
+prediction()
