@@ -17,7 +17,7 @@ print(digits.target)
 #predict using model called clf
 
 '''
-
+#TODO: move the data getting functions into a different module
 #ideas to make this better -> use pandas dataframes, first get list of genomes and then for each genome query ->store in file and merge results, use memmaps or mmaps (memmaps lets us store in lists, which is what svm takes)
 #TODO: Refactor so that we use sets instead of lists, speed vs memory???
 
@@ -115,4 +115,3 @@ def prediction():
 
     training(X, y)
 
-prediction()
