@@ -79,6 +79,7 @@ def access_check():
     seq_dict = get_sequence_dict('/home/james/backend/app/modules/PanPredic/tests/data/panResults/accessoryGenomeFragments.fasta')
     sequence_count = 0
     match_count = 0
+    #with open ('/home/james/backend/app/modules/PanPredic/tests/data/sequence_errors.fasta', 'a+') as f:
     for header in seq_dict:
         sequence_count = sequence_count + 1
         seq = seq_dict[header]
@@ -88,10 +89,43 @@ def access_check():
         else:
             print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
             print('FAILURE')
+            header = '>' + header + '\n'
+            print(header)
+            print(seq)
+            #seq = seq + '\n'
+            #f.write(header)
+            #f.write(seq)
             print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+
 
 
     print(sequence_count)
     print(match_count)
 
-#access_check()
+def access_check2():
+    seq_dict = get_sequence_dict('/home/james/backend/app/modules/PanPredic/tests/data/panResults/accessoryGenomeFragments.fasta')
+    seq_dict2 = get_sequence_dict('/home/james/backend/app/modules/PanPredic/tests/data/panResults2/accessoryGenomeFragments.fasta')
+    sequence_count = 0
+    match_count = 0
+    #with open ('/home/james/backend/app/modules/PanPredic/tests/data/sequence_errors.fasta', 'a+') as f:
+    for header in seq_dict:
+        sequence_count = sequence_count + 1
+        seq = seq_dict[header]
+        if header in seq_dict2:
+            match_count = match_count + 1
+            print('SUCCESS')
+        else:
+            print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+            print('FAILURE')
+            header = '>' + header + '\n'
+            print(header)
+            print(seq)
+            #seq = seq + '\n'
+            #f.write(header)
+            #f.write(seq)
+            print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+
+
+
+    print(sequence_count)
+    print(match_count)

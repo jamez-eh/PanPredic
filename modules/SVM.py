@@ -1,6 +1,6 @@
 from sklearn import datasets
 from sklearn import svm
-from app.modules.PanPredic.modules.queries import gen_pan, pan_names, get_virulence, vir_names
+from app.modules.PanPredic.modules.queries import gen_pan, pan_names, get_virulence, vir_names, get_genomes
 import pickle
 '''
 digits = datasets.load_digits()
@@ -56,19 +56,10 @@ def eval_vectors(gen_pan, pan_genome):
 
 
 #TODO: refactor so that it is more general use (accept an argument to dictate which kind of label -> location, virulence, amr etc)
-def get_labels():
-    '''
-    
-    :return: a list of all labels for 
-    '''
-
-    vir = get_virulence()
-    names = vir_names()
-
-    return eval_vectors(vir, names)
 
 
-def get_vectors():
+
+def get_vectors(region):
     '''
     
     :return: X and y vectors for svm training
@@ -79,16 +70,15 @@ def get_vectors():
 
 
     pans = get_data()
-    virs = get_labels()
+    virs = get_genomes(region)
 
+    #assigning vectors like this keeps pan genome regions and AMR, vir, etc in sync
     for genome in pans:
         X.append(pans[genome])
-        y.append(virs[genome][0])
-
-
-    print(y)
-
-
+        if genome in virs:
+            y.append(1)
+        else:
+            y.append(-1)
 
     return X, y
 
@@ -109,9 +99,15 @@ def training(X, y):
 
 
 
-def prediction():
+def prediction(region):
+    '''
+    
+    :param region: the amr or virulence factor etc that we are interested in
+    :return: 
+    '''
 
-    X, y = get_vectors()
+    X, y = get_vectors(region)
 
     training(X, y)
+
 

@@ -31,7 +31,7 @@ def gen_match(genome_files):
 
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
                     #'queryFile  ' + ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta',
-                    b'baseDirectory  '  +  PAN_RESULTS.encode() + b'\n',
+                    b'baseDirectory  '  +  PAN_RESULTS.encode() + b'2\n',
                     b'numberOfCores	4 \n',
                     b'mummerDirectory	/home/james/pan_genome/MUMmer3.23/ \n',
                     b'blastDirectory	/home/james/pan_genome/ncbi-blast-2.6.0+/bin/ \n',
@@ -48,10 +48,10 @@ def gen_match(genome_files):
 
     pan_list = check_panseq()
 
-
+    '''
     if pan_list:
         settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
-
+    '''
 
 
 

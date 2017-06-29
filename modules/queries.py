@@ -92,15 +92,15 @@ def get_pangenome(genome):
 @tolist
 @submit
 @prefix
-def get_genomes(pan):
+def get_genomes(region):
 
     query = """
     SELECT ?p WHERE {{
           	?p a g:Genome .
-   			?p :hasPart <{PanGenomeRegion}> .
+   			?p :hasPart <{region}> .
 
     }}
-    """.format(PanGenomeRegion = pan)
+    """.format(region = region)
     return query
 
 
@@ -179,6 +179,7 @@ def get_virulence():
 @prefix
 def vir_names():
     '''
+    Grabs all Virulence factors possible
     '''
     query = """
     SELECT ?p WHERE {{
@@ -187,4 +188,20 @@ def vir_names():
     }}
 
     """
+    return query
+
+@todict
+@submit
+@prefix
+def get_virulence():
+
+    query = """
+    SELECT ?g ?p WHERE {{
+          	?p a :VirulenceFactor .
+          	?g a g:Genome .
+   			?p :isFoundIn ?g .
+
+    }}
+    """
+
     return query
