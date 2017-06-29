@@ -1,4 +1,4 @@
-from app.modules.PanPredic.modules.queries import gen_pan, pan_names, get_virulence, vir_names
+from app.modules.PanPredic.modules.queries import gen_pan, pan_names, get_virulence, vir_names, get_genomes
 
 
 def eval_vectors(gen_pan, pan_genome):
@@ -44,3 +44,37 @@ def get_data():
     pan_genome = pan_names()
 
     return eval_vectors(gen_panreg, pan_genome)
+
+
+
+
+#TODO: move the data getting functions into a different module
+#ideas to make this better -> use pandas dataframes, first get list of genomes and then for each genome query ->store in file and merge results, use memmaps or mmaps (memmaps lets us store in lists, which is what svm takes)
+#TODO: Refactor so that we use sets instead of lists, speed vs memory???
+
+
+
+
+#TODO: refactor so that it is more general use (accept an argument to dictate which kind of label -> location, virulence, amr etc)
+
+def get_vectors(region):
+    '''
+
+    :return: X and y vectors for svm training
+    '''
+
+    X = []
+    y = []
+
+    pans = get_data()
+    virs = get_genomes(region)
+
+    # assigning vectors like this keeps pan genome regions and AMR, vir, etc in sync
+    for genome in pans:
+        X.append(pans[genome])
+        if genome in virs:
+            y.append(1)
+        else:
+            y.append(0)
+
+    return X, y

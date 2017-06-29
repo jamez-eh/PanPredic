@@ -5,6 +5,7 @@ import pandas as pd
 from app.modules.PanPredic.modules.data_shape import get_labels, get_data
 from statsmodels.stats.multitest import multipletests
 
+#TODO: make all arrays numpy arrays
 
 # logging
 log_file = initialize_logging()
@@ -48,14 +49,14 @@ def fishers():
                         neg[1] = neg[1] + 1
 
                 p = stats.fisher_exact([pos, neg])
-                p_matrix.append(p)
+                #p_matrix.append(p)
 
-                '''
+
                 if amr_index == 0:
                     p_matrix.append([p])
                 else:
                     p_matrix[pan_index].append(p)
-                '''
+
 
                 neg = [0, 0]
                 pos = [0, 0]
@@ -67,7 +68,7 @@ def fishers():
             print(amr_index)
             print('----------------------------------------------------------------------------------------')
         break
-    reject, p = multipletests(p_matrix, alpha=0.05, method='fdr_bh')
-    return p
+    #reject, p = multipletests(p_matrix, alpha=0.05, method='fdr_bh')
+    return p_matrix
 
 fishers()
