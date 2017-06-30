@@ -3,6 +3,7 @@ from app.modules.PanPredic.modules.queries import check_panseq
 import os
 from platform import system
 import subprocess
+import re
 
 
 
@@ -15,6 +16,14 @@ def program_loc():
         muscle = subprocess.check_output([cmd, 'muscle'])
         mummer = subprocess.check_output([cmd, 'mummer'])
         blast = subprocess.check_output([cmd, 'blastn'])
+
+        muscle = re.search('(.*?)(?=muscle)', muscle)
+        mummer = re.search('(.*?)(?=mummer)', mummer)
+        blast = re.search('(.*?)(?=blastn)', blast)
+
+        muscle = muscle.group(0)
+        mummer = mummer.group(0)
+        blast = blast.group(0)
         return muscle, mummer, blast
 
     except Exception as error:
@@ -22,20 +31,21 @@ def program_loc():
 
 
 
-print(program_loc())
 
 def gen_novel(genome_files):
+
+    muscle, mummer, blast = program_loc()
 
     with open(ROOT_DIR + '/panseq_novel_pangenome.conf', 'wb') as f:
         f.writelines([b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'referenceDirectory '	+ ROOT_DIR.encode() + b'/Data \n',
                     b'baseDirectory  ' + NOVEL_RESULTS.encode() + b'\n',
                     b'numberOfCores	4 \n',
-                    b'mummerDirectory	/home/james/pan_genome/MUMmer3.23/ \n',
-                    b'blastDirectory	/home/james/pan_genome/ncbi-blast-2.6.0+/bin/ \n',
+                    b'mummerDirectory '	+ mummer.encode() + '\n',
+                    b'blastDirectory ' + blast.encode() +  '\n',
                     b'minimumNovelRegionSize	500 \n',
                     b'novelRegionFinderMode	no_duplicates \n',
-                    b'muscleExecutable	/home/james/pan_genome/muscle3.8.31_i86linux64 \n',
+                    b'muscleExecutable ' + muscle + '\n',
                     b'fragmentationSize	500 \n',
                     b'percentIdentityCutoff	90 \n',
                     b'runMode	novel \n',
@@ -46,14 +56,15 @@ def gen_novel(genome_files):
 
 def gen_match(genome_files):
 
+    muscle, mummer, blast = program_loc()
+
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
-                    #'queryFile  ' + ROOT_DIR + '/PanGenomeRef/coreGenomeFragments.fasta',
                     b'baseDirectory  '  +  PAN_RESULTS.encode() + b'2\n',
                     b'numberOfCores	4 \n',
-                    b'mummerDirectory	/home/james/pan_genome/MUMmer3.23/ \n',
-                    b'blastDirectory	/home/james/pan_genome/ncbi-blast-2.6.0+/bin/ \n',
+                    b'mummerDirectory '	+ mummer.encode() + '\n',
+                    b'blastDirectory ' + blast.encode() +  '\n',
                     b'minimumNovelRegionSize	500 \n',
-                    b'muscleExecutable	/home/james/pan_genome/muscle3.8.31_i86linux64 \n',
+                    b'muscleExecutable ' + muscle + '\n',
                     b'novelRegionFinderMode	no_duplicates \n',
                     b'fragmentationSize	500 \n',
                     b'percentIdentityCutoff	90 \n',
