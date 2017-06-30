@@ -126,7 +126,6 @@ def pan_to_dict(file, hash_dict):
             genome_dict[genome] = {contig_name: []}
             genome_dict[genome][contig_name] = [row_dict]
 
-    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/pan_to_dict.json',genome_dict)
     return genome_dict
 
 
@@ -141,7 +140,6 @@ def get_sequence_dict(file):
     sequence_dict = {}
     for record in SeqIO.parse(file, "fasta"):
         sequence_dict[record.description] = str(record.seq)
-    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/seq_dict.json', sequence_dict)
     return sequence_dict
 
 #TODO: refactor this code so it is faster
@@ -158,7 +156,6 @@ def merge_dicts(pan_dict, seq_dict):
                         number = number + 1
                         break
     print(number)
-    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/merge_dicts.json',pan_dict)
     return {'PanGenomeRegion': pan_dict}
 
 
@@ -204,7 +201,6 @@ def hash_merge(hash_dict, pan_dict):
 
     return pan_dict
 
-    json_dump('/home/james/backend/app/modules/PanPredic/tests/data/merged.json', pan_dict)
 
 
 #parses the locus name for the locusId when we are adding additional pan genome regions to the db
@@ -226,7 +222,6 @@ def workflow(pan_file, seq_file, query_files):
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
 
-    print('\nfinished workflow\n')
     return final_dict
 
 
