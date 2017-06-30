@@ -1,11 +1,28 @@
 from app.modules.PanPredic.definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS
 from app.modules.PanPredic.modules.queries import check_panseq
-from app.modules.PanPredic.modules.pan_run import build_pan
-
+import os
+from platform import system
+import subprocess
 
 
 
 # TODO: edit file locations of programs
+
+def program_loc():
+
+    cmd = "where" if system() == "Windows" else "which"
+    try:
+        muscle = subprocess.check_output([cmd, 'muscle'])
+        mummer = subprocess.check_output([cmd, 'mummer'])
+        blast = subprocess.check_output([cmd, 'blastn'])
+        return muscle, mummer, blast
+
+    except Exception as error:
+        print('Blast, mummer, and muscle are not all installed correctly. Please check installations of these programs')
+
+
+
+print(program_loc())
 
 def gen_novel(genome_files):
 

@@ -20,6 +20,7 @@ def svm_predict(region, genome_vector):
     '''
     
     :param region: the amr or virulence factor etc that we are interested in
+           genome_vector: a pan genome bit map for genome of interest
     :return: 0 if prediction is false, 1 if prediction is true
     '''
 
@@ -39,6 +40,7 @@ def bayes_predict(region, genome_vector):
     '''
 
     :param region: the amr or virulence factor etc that we are interested in
+           genome_vector: a pan genome bit map for genome of interest
     :return: 0 if prediction is false, 1 if prediction is true
     '''
 

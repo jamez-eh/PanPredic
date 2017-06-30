@@ -4,7 +4,6 @@ from app.modules.PanPredic.modules.conf_gen import generate_conf
 from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
 from app.modules.PanPredic.modules.grapher import create_graph
 from app.modules.PanPredic.definitions import ROOT_DIR
-from app.modules.PanPredic.modules.SVM import prediction
 import pickle
 from app.modules.loggingFunctions import initialize_logging
 import logging
