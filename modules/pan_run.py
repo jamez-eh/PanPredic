@@ -57,7 +57,7 @@ def panseq(query_dict):
         print(sequence_counter(query_file))
     '''
     #finds a full set of pangenome regions for the queried genomes
-    match = subprocess.Popen(['/home/james/perl5/bin/panseq', match_config], stdin=subprocess.PIPE)
+    match = subprocess.Popen([panseq, match_config], stdin=subprocess.PIPE)
 
     match.communicate()
 
