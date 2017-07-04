@@ -5,11 +5,29 @@ from app.modules.PanPredic.definitions import ROOT_DIR
 from app.modules.PanPredic.modules.queries import query_panseq
 import os
 from app.modules.PanPredic.modules.pandas_parsing import sequence_counter
+from platform import system
 
-args = 'perl lib/panseq.pl settings.txt'
+
+
+def pan_loc():
+
+    cmd = "where" if system() == "Windows " else "which"
+    print(cmd)
+
+    try:
+        panseq = subprocess.check_output([cmd, 'panseq'])
+        
+        return panseq
+              
+    except Exception as error:
+        print('panseq installation not found')
+
+pan_loc()
+
 
 def panseq(query_dict):
 
+    panseq = pan_loc()
 
     match_config = str(query_dict['match'])
     novel_config = str(query_dict['novel'])
@@ -39,7 +57,7 @@ def panseq(query_dict):
         print(sequence_counter(query_file))
     '''
     #finds a full set of pangenome regions for the queried genomes
-    match = subprocess.Popen(["perl", "/home/james/Panseq/bin/panseq.pl", match_config], stdout=sys.stdout)
+    match = subprocess.Popen(['/home/james/perl5/bin/panseq', match_config], stdin=subprocess.PIPE)
 
     match.communicate()
 
@@ -50,6 +68,8 @@ def panseq(query_dict):
         os.remove(query_file)
 
     '''
+
+
 #TODO: protect this from large files (don't read all of it into memory) ->do with pandas
 
 #TODO: whenever there is a file being appended, check to see if it exists first, and delete if so

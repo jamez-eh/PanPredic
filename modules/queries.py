@@ -1,4 +1,3 @@
-import config
 from os import path
 import sys
 sys.path.append(path.abspath('/home/james/backend/app/'))

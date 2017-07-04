@@ -7,7 +7,6 @@ import re
 
 
 
-# TODO: edit file locations of programs
 
 def program_loc():
 
@@ -20,17 +19,21 @@ def program_loc():
         muscle = re.search('(.*?)(?=muscle)', muscle)
         mummer = re.search('(.*?)(?=mummer)', mummer)
         blast = re.search('(.*?)(?=blastn)', blast)
-
+       
+       
         muscle = muscle.group(0)
         mummer = mummer.group(0)
         blast = blast.group(0)
+
         return muscle, mummer, blast
+
+
 
     except Exception as error:
         print('Blast, mummer, and muscle are not all installed correctly. Please check installations of these programs')
 
 
-
+program_loc()
 
 def gen_novel(genome_files):
 
