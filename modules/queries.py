@@ -87,6 +87,23 @@ def get_pangenome(genome):
     return query
 
 
+@tolist
+@submit
+@prefix
+def get_single_region(genome):
+
+    query = """
+    SELECT ?p WHERE {{
+          	?p a :PanGenomeRegion .
+   			?p :isFoundIn <{genome}> .
+
+    }} 
+    LIMIT 1
+    """.format(genome = gu(genome))
+    return query
+
+
+
 #gets genomes that a specific pan region belong to
 @tolist
 @submit

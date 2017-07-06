@@ -8,12 +8,37 @@ from app.modules.PanPredic.modules.pandas_parsing import sequence_counter
 from platform import system
 
 
+def sym_linker(src):
+    '''
+    Creates a subdirectory in the query directory with symlinks to all the fasta files, 
+    necessary for panseq to run with all the junk that other process place in the query dir
+    :param src: source directory
+    :param dst: destination directory
+    :return: source directory
+    '''
+    dst = src + '/panseq_syms'
+    try:
+        os.mkdir(dst)
+    except:
+        print(dst + ' already exists')
+
+    for file in os.listdir(src):
+        if file.endswith('.fna') or file.endswith('.fasta'):
+            try:
+                os.symlink(src + '/' + file, dst + '/' + file)
+            except:
+                print(dst + '/' + file +' already exists')
+
+    return dst
+
+
+
+
 
 def pan_loc():
 
     cmd = "where" if system() == "Windows " else "which"
-    print(cmd)
-
+   
     try:
         panseq = subprocess.check_output([cmd, 'panseq'])
         
@@ -22,7 +47,7 @@ def pan_loc():
     except Exception as error:
         print('panseq installation not found')
 
-pan_loc()
+
 
 
 def panseq(query_dict):
@@ -57,17 +82,20 @@ def panseq(query_dict):
         print(sequence_counter(query_file))
     '''
     #finds a full set of pangenome regions for the queried genomes
-    match = subprocess.Popen([panseq, match_config], stdin=subprocess.PIPE)
+            
+    match = subprocess.Popen(['panseq', match_config], stdout=sys.stdout)
+
 
     match.communicate()
 
-    print('TOTAL PAN REGIONS COUNT: \n')
-    print(sequence_counter('/home/james/backend/app/modules/PanPredic/tests/data/panResults/accessoryGenomeFragments.fasta'))
+    #print('TOTAL PAN REGIONS COUNT: \n')
+    #print(sequence_counter('/home/james/backend/app/modules/PanPredic/tests/data/panResults/accessoryGenomeFragments.fasta'))
     '''
     if pan_list:
         os.remove(query_file)
 
     '''
+    
 
 
 #TODO: protect this from large files (don't read all of it into memory) ->do with pandas

@@ -1,14 +1,13 @@
-import json
 import os
 import re
 from Bio import SeqIO
-import app.modules.PanPredic.modules.uploader
 from app.modules.turtleGrapher.datastruct_savvy import parse_gene_dict
 from app.modules.turtleGrapher.turtle_grapher import generate_graph
 from app.modules.turtleGrapher.turtle_utils import generate_uri as gu
 from app.modules.PanPredic.definitions import ROOT_DIR
 from app.modules.blazeUploader import upload_graph
-from app.modules.PanPredic.modules.queries import check_genome
+from app.modules.PanPredic.modules.queries import get_single_region
+import pdb
 
 #generates a hash for a file
 def generate_hash(filename):
@@ -99,7 +98,7 @@ def create_graph(dict):
     graph = generate_graph()
     for region in dict:
         for genomeURI in dict[region]:
-            if not check_genome(genomeURI):
+            if not get_single_region(genomeURI):
                 graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
                 upload_graph.upload_graph(graph)
                 data = graph.serialize(format="turtle")
@@ -107,6 +106,7 @@ def create_graph(dict):
                     f.write(data)
                     #TODO: find a better way to make graph empty
                 graph = generate_graph()
+            else: print('Pangenome for this genome is already in Blazegraph')
 
 
 

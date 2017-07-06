@@ -7,6 +7,7 @@ from app.modules.PanPredic.definitions import ROOT_DIR
 import pickle
 from app.modules.loggingFunctions import initialize_logging
 import logging
+import pdb
 
 
 log_file = initialize_logging()
@@ -28,13 +29,14 @@ def pan(args_dict):
     log.debug('panseq finished')
 
     # (3) Parse panseq results
+    print('Parsing')
     results_dict= workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/accessoryGenomeFragments.fasta', query_files)
     log.debug('panseq parsed:'+ str(results_dict))
 
-    #pickle.dump(results_dict, open(pickle_file, 'wb'))
+    pickle.dump(results_dict, open(pickle_file, 'wb'))
 
     # (4) create graph
-    #create_graph(results_dict)
+    create_graph(results_dict)
     #log.debug('graph finished: ' + str(pan_turtle))
 
     # (5) prediction
@@ -47,8 +49,10 @@ dict['i'] = '/home/james/backend/app/modules/PanPredic/tests/data/filteredgenome
 
 pan(dict)
 
-'''
-results_dict = pickle.load(open(ROOT_DIR + '/results_pickle.p', 'rb'))
 
-graph = create_graph(results_dict)
-'''
+
+
+
+
+
+

@@ -98,5 +98,6 @@ def generate_conf(genome_files):
     query_dict['novel'] = gen_novel(genome_files)
     query_dict['match'] = gen_match(genome_files)
 
+
     return query_dict
 
