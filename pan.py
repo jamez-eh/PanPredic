@@ -23,7 +23,8 @@ def pan(args_dict):
     #create a subdirectory with symlinks to original files (keeps directory clean)
     query_files = sym_linker(query_files)
 
-    # (1) generate conf files
+    # (1) generate conf files, these specify locations of genomes as well as panseq run parameters
+    #stores them in a dictionary {novel: conf_file, match: conf_file}
     query_dict = generate_conf(query_files)
     log.debug('query dict:' + str(query_dict))
 

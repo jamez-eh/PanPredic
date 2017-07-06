@@ -79,10 +79,10 @@ def gen_match(genome_files):
 
     pan_list = check_panseq()
 
-    '''
+
     if pan_list:
         settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
-    '''
+
 
 
 
