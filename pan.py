@@ -16,9 +16,9 @@ log = logging.getLogger(__name__)
 
 def pan(args_dict):
 
-    pickle_file = ROOT_DIR + '/results_pickle.p'
-
     query_files = args_dict['i']
+
+    pickle_file = query_files + '/p_pasneq.p'
 
     #create a subdirectory with symlinks to original files (keeps directory clean)
     query_files = sym_linker(query_files)
