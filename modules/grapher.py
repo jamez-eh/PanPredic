@@ -101,10 +101,6 @@ def create_graph(dict):
             if not get_single_region(genomeURI):
                 graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
                 upload_graph.upload_graph(graph)
-                data = graph.serialize(format="turtle")
-                with open(ROOT_DIR + '/tests/data/panregions.ttl', 'a+') as f:
-                    f.write(data)
-                    #TODO: find a better way to make graph empty
                 graph = generate_graph()
             else: print('Pangenome for this genome is already in Blazegraph')
 
