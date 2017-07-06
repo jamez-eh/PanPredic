@@ -1,4 +1,4 @@
-from app.modules.PanPredic.modules.pan_run import panseq
+from app.modules.PanPredic.modules.pan_run import panseq, sym_linker
 from app.modules.PanPredic.modules.uploader import workflow
 from app.modules.PanPredic.modules.conf_gen import generate_conf
 from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
@@ -19,6 +19,9 @@ def pan(args_dict):
     pickle_file = ROOT_DIR + '/results_pickle.p'
 
     query_files = args_dict['i']
+
+    #create a subdirectory with symlinks to original files (keeps directory clean)
+    query_files = sym_linker(query_files)
 
     # (1) generate conf files
     query_dict = generate_conf(query_files)
