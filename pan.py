@@ -1,13 +1,12 @@
-from app.modules.PanPredic.modules.pan_run import panseq, sym_linker
-from app.modules.PanPredic.modules.uploader import workflow
-from app.modules.PanPredic.modules.conf_gen import generate_conf
-from app.modules.PanPredic.definitions import PAN_RESULTS, NOVEL_RESULTS
-from app.modules.PanPredic.modules.grapher import create_graph
-from app.modules.PanPredic.definitions import ROOT_DIR
+
+from modules.PanPredic.uploader import workflow
+from modules.PanPredic.pan_run import panseq, sym_linker
+from modules.PanPredic.conf_gen import generate_conf
+from modules.PanPredic.definitions import PAN_RESULTS
 import pickle
-from app.modules.loggingFunctions import initialize_logging
+from modules.loggingFunctions import initialize_logging
 import logging
-import pdb
+
 
 
 log_file = initialize_logging()
@@ -39,20 +38,14 @@ def pan(args_dict):
 
     pickle.dump(results_dict, open(pickle_file, 'wb'))
 
+    #now the graph is created in grapher, the same function that runs this queue
+
     # (4) create graph
-    create_graph(results_dict)
+    #create_graph(results_dict)
     #log.debug('graph finished: ' + str(pan_turtle))
 
     # (5) prediction
     #prediction()
-
-
-
-dict = {}
-dict['i'] = '/home/james/backend/app/modules/PanPredic/tests/data/filteredgenomes'
-
-pan(dict)
-
 
 
 
