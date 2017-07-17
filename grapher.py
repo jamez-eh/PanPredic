@@ -118,18 +118,29 @@ def create_graph(dict):
 
 
 def pan_graph(single_dict, job_id, query_dir, args_dict):
+    print('james_debug query_dir: ' + str(query_dir))
 
+    job_dict = {}
     job_pan = singles_q.enqueue(pan, single_dict, depends_on=job_id)
+
     dict = ast.literal_eval(job_pan.result)
     graph = generate_graph()
     for region in dict:
         for genomeURI in dict[region]:
             #checks if genome URI already has a pangenome associated, if so we don't need to process it further
             if not get_single_region(genomeURI):
-                job_pan_datastruct = multiples_q.enqueue(upload_graph, graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
+                job_pan_datastruct = multiples_q.enqueue(graph_upload(), graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
+                job_dict[str(genomeURI) + '_job_pan_datastruct'] = job_pan_datastruct
                 #clears graph
                 graph = generate_graph()
             else: print('Pangenome for this genome is already in Blazegraph')
+
+
+            job_pan_beautify = singles_q.enqueue(beautify, single_dict, query_dir + '_panseq.p', depends_on=job_pan,
+                                                 result_ttl=-1)
+
+
+    return job_dict
 
     job_pan_beautify = singles_q.enqueue(beautify, single_dict, query_dir + 'panseq.p', depends_on=job_pan, result_ttl=-1)
 

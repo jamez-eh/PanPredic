@@ -1,12 +1,14 @@
 
 from Bio import SeqIO
-import os
-import sys
 import pandas as pd
 import json
 import re
 from modules.PanPredic.definitions import ROOT_DIR
-from modules.PanPredic.grapher import get_URIs
+
+import sys; print(sys.executable)
+print(sys.path)
+import os; print(os.getcwd())
+#from modules.PanPredic.grapher import get_URIs
 import pickle
 
 
