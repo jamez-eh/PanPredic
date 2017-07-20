@@ -8,7 +8,7 @@ from modules.PanPredic.definitions import ROOT_DIR
 import sys; print(sys.executable)
 print(sys.path)
 import os; print(os.getcwd())
-#from modules.PanPredic.grapher import get_URIs
+from modules.PanPredic.grapher import get_URIs
 import pickle
 
 

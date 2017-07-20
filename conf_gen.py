@@ -25,15 +25,16 @@ def program_loc():
         mummer = mummer.group(0)
         blast = blast.group(0)
 
+        print('james_debug: ' + str(muscle) + str(mummer) + str(blast))
         return muscle, mummer, blast
 
 
 
     except Exception as error:
         print('Blast, mummer, and muscle are not all installed correctly. Please check installations of these programs')
+        return 'nothing', 'nothing', 'nothing'
 
 
-program_loc()
 
 def gen_novel(genome_files):
 

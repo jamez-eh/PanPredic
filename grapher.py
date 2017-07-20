@@ -117,7 +117,7 @@ def create_graph(dict):
 
 
 
-def pan_graph(single_dict, job_id, query_dir, args_dict):
+def pan_graph(single_dict, job_id, query_dir):
     print('james_debug query_dir: ' + str(query_dir))
 
     job_dict = {}

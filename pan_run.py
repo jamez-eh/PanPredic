@@ -6,26 +6,29 @@ from modules.PanPredic.queries import query_panseq
 import os
 from modules.PanPredic.pandas_parsing import sequence_counter
 from platform import system
+from datetime import datetime
 
-
-def sym_linker(src):
+#TODO: add src to definitions and dst to definitions
+def sym_linker(file_list):
     '''
     Creates a subdirectory in the query directory with symlinks to all the fasta files, 
     necessary for panseq to run with all the junk that other process place in the query dir
-    :param src: source directory
+    :param a list of files
     :param dst: destination directory
     :return: source directory
     '''
-    dst = src + '/panseq_syms'
+    now = datetime.now()
+    now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    dst = str(now) + 'panseq_syms'
     try:
         os.mkdir(dst)
     except:
         print(dst + ' already exists')
 
-    for file in os.listdir(src):
+    for file in file_list:
         if file.endswith('.fna') or file.endswith('.fasta'):
             try:
-                os.symlink(src + '/' + file, dst + '/' + file)
+                os.symlink('/datastore/' + file, dst + '/' + file)
             except:
                 print(dst + '/' + file +' already exists')
 

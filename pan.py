@@ -6,18 +6,20 @@ from modules.PanPredic.definitions import PAN_RESULTS
 import pickle
 from modules.loggingFunctions import initialize_logging
 import logging
-
+from datetime import datetime
 
 
 log_file = initialize_logging()
 log = logging.getLogger(__name__)
 
 
-def pan(args_dict):
-
+def pan(args_dict, pickle_file):
+    print('james_debug: pan is running')
     query_files = args_dict['i']
-
-    pickle_file = query_files + '/p_pasneq.p'
+    #create a unique filename
+    now = datetime.now()
+    now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    
 
     #create a subdirectory with symlinks to original files (keeps directory clean)
     query_files = sym_linker(query_files)
