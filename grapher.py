@@ -10,7 +10,7 @@ from modules.PanPredic.queries import get_single_region
 from modules.beautify import beautify
 
 import ast
-from modules.PanPredic import pan
+#from modules.PanPredic.pan import pan
 import redis
 from rq import Queue
 
@@ -116,7 +116,7 @@ def create_graph(dict):
             else: print('Pangenome for this genome is already in Blazegraph')
 
 
-
+'''
 def pan_graph(single_dict, job_id, query_dir):
     print('james_debug query_dir: ' + str(query_dir))
 
@@ -145,15 +145,16 @@ def pan_graph(single_dict, job_id, query_dir):
     job_pan_beautify = singles_q.enqueue(beautify, single_dict, query_dir + 'panseq.p', depends_on=job_pan, result_ttl=-1)
 
 def graph_upload(graph, dict, genomeURI, region):
-    '''
+
     bundles two functions together so it queuable
     :param graph: 
     :param dict: 
     :param genomeURI: amr_dict
     :param region: 
     :return: 
-    '''
+
     graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
     upload_graph.upload_graph(graph)
 
 
+'''

@@ -19,18 +19,20 @@ def sym_linker(file_list):
     '''
     now = datetime.now()
     now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-    dst = str(now) + 'panseq_syms'
+    dst = '/datastore/' +  str(now) + '_panseq_syms'
     try:
         os.mkdir(dst)
     except:
         print(dst + ' already exists')
 
+
     for file in file_list:
         if file.endswith('.fna') or file.endswith('.fasta'):
             try:
-                os.symlink('/datastore/' + file, dst + '/' + file)
+                os.symlink(file, dst + '/' + os.path.basename(file))
             except:
                 print(dst + '/' + file +' already exists')
+
 
     return dst
 

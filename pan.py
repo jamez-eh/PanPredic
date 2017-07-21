@@ -15,6 +15,7 @@ log = logging.getLogger(__name__)
 
 def pan(args_dict, pickle_file):
     print('james_debug: pan is running')
+
     query_files = args_dict['i']
     #create a unique filename
     now = datetime.now()

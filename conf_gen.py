@@ -24,8 +24,9 @@ def program_loc():
         muscle = muscle.group(0)
         mummer = mummer.group(0)
         blast = blast.group(0)
+        #this is a cheat, and is not ideal
+        muscle, mummer, blast = '/opt/conda/envs/backend/bin/'
 
-        print('james_debug: ' + str(muscle) + str(mummer) + str(blast))
         return muscle, mummer, blast
 
 
@@ -99,6 +100,6 @@ def generate_conf(genome_files):
     query_dict['novel'] = gen_novel(genome_files)
     query_dict['match'] = gen_match(genome_files)
 
-
+    print('james_debug: conffiles: ' + str(query_dict))
     return query_dict
 
