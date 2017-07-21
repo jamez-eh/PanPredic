@@ -12,6 +12,7 @@ def program_loc():
 
     cmd = "where" if system() == "Windows" else "which"
     try:
+        '''
         muscle = subprocess.check_output([cmd, 'muscle'])
         mummer = subprocess.check_output([cmd, 'mummer'])
         blast = subprocess.check_output([cmd, 'blastn'])
@@ -19,13 +20,16 @@ def program_loc():
         muscle = re.search('(.*?)(?=muscle)', muscle)
         mummer = re.search('(.*?)(?=mummer)', mummer)
         blast = re.search('(.*?)(?=blastn)', blast)
-       
+        
        
         muscle = muscle.group(0)
         mummer = mummer.group(0)
         blast = blast.group(0)
+        '''
         #this is a cheat, and is not ideal
-        muscle, mummer, blast = '/opt/conda/envs/backend/bin/'
+        muscle = '/opt/conda/envs/backend/bin/'
+        mummer = '/opt/conda/envs/backend/bin/'
+        blast = '/opt/conda/envs/backend/bin/'
 
         return muscle, mummer, blast
 
@@ -34,7 +38,6 @@ def program_loc():
     except Exception as error:
         print('Blast, mummer, and muscle are not all installed correctly. Please check installations of these programs')
         return 'nothing', 'nothing', 'nothing'
-
 
 
 def gen_novel(genome_files):
@@ -64,7 +67,7 @@ def gen_match(genome_files):
     muscle, mummer, blast = program_loc()
 
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
-                    b'baseDirectory  '  +  PAN_RESULTS.encode() + b'2\n',
+                    b'baseDirectory  '  +  PAN_RESULTS.encode() + b'\n',
                     b'numberOfCores	4 \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
                     b'blastDirectory ' + blast.encode() +  '\n',
