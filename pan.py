@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 def pan(args_dict, pickle_file):
-    print('james_debug: pan is running')
+    
 
     query_files = args_dict['i']
     #create a unique filename
@@ -28,16 +28,16 @@ def pan(args_dict, pickle_file):
     # (1) generate conf files, these specify locations of genomes as well as panseq run parameters
     #stores them in a dictionary {novel: conf_file, match: conf_file}
     query_dict = generate_conf(query_files)
-    log.debug('query dict:' + str(query_dict))
+    #log.debug('query dict:' + str(query_dict))
 
     # (2) run panseq
     panseq(query_dict)
-    log.debug('panseq finished')
+    #log.debug('panseq finished')
 
     # (3) Parse panseq results
-    print('Parsing')
+    #print('Parsing')
     results_dict= workflow(PAN_RESULTS + '/pan_genome.txt', PAN_RESULTS + '/accessoryGenomeFragments.fasta', query_files)
-    log.debug('panseq parsed:'+ str(results_dict))
+    #log.debug('panseq parsed:'+ str(results_dict))
 
     pickle.dump(results_dict, open(pickle_file, 'wb'))
 

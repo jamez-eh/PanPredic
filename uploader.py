@@ -5,15 +5,16 @@ import json
 import re
 from modules.PanPredic.definitions import ROOT_DIR
 
-import sys; print(sys.executable)
-print(sys.path)
-import os; print(os.getcwd())
+import sys 
+
+import os
 from  modules.PanPredic.grapher import get_URIs
 import pickle
 
-
+from modules.PanPredic.pan_utils import contig_name_parse
 from hashlib import sha1
 
+'''
 def contig_name_parse(pan_contig):
     """
     The panseq contig name is unhelpful
@@ -37,7 +38,7 @@ def contig_name_parse(pan_contig):
         return pan_contig
 
     return m.group(0)
-
+'''
 
 
 
@@ -111,7 +112,8 @@ def pan_to_dict(file, hash_dict):
         ex. {'Some_Contig_ID':[{'START','STOP','ORIENTATION','GENE_NAME'}, {}, ....], etc}
     """
     df = pd.read_csv(file, sep=None)
-    os.remove(file)
+    #don't remove the file if pickle is going to be called in workflow
+    #os.remove(file)
 
     # used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
     '''
@@ -257,7 +259,7 @@ def workflow(pan_file, seq_file, query_files):
     pan_dict = pan_to_dict(parsed_file, hash_dict)
 
     #make a pickle for the front end (beautify)
-    pickle = pickler(parsed_file)
+    pickle = pickler(parsed_file, query_files)
 
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)

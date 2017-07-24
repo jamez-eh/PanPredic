@@ -1,6 +1,6 @@
 from os import path
 import sys
-sys.path.append(path.abspath('/home/james/backend/app/'))
+#sys.path.append(path.abspath('/home/james/backend/app/'))
 from modules.decorators import submit, tolist, prefix, todict
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
 

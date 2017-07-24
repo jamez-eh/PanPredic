@@ -37,12 +37,7 @@ def dict_counter (file):
             for pan_region in dict[genome][contig]:
                 pan_regions = pan_regions + 1
 
-    print('genomes: ')
-    print(genomes)
-    print('contigs: ')
-    print(contigs)
-    print('PanGenomeRegions: ')
-    print(pan_regions)
+
 
 #dict_counter('/home/james/backend/app/modules/PanPredic/tests/data/pan_to_dict.json')
 
@@ -68,8 +63,7 @@ def comparison (new_dict):
                         found = True
                         break
 
-    print(count)
-    print(not_found)
+
 
 
 #comparison('/home/james/backend/app/modules/PanPredic/tests/data/merge_dicts.json')
@@ -89,17 +83,16 @@ def access_check():
             print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
             print('FAILURE')
             header = '>' + header + '\n'
-            print(header)
-            print(seq)
+
+
             #seq = seq + '\n'
             #f.write(header)
             #f.write(seq)
-            print('--------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
 
 
 
-    print(sequence_count)
-    print(match_count)
+
+
 
 def access_check2():
     seq_dict = get_sequence_dict('/home/james/backend/app/modules/PanPredic/tests/data/panResults/accessoryGenomeFragments.fasta')
@@ -118,7 +111,7 @@ def access_check2():
             print('FAILURE')
             header = '>' + header + '\n'
             print(header)
-            print(seq)
+
             #seq = seq + '\n'
             #f.write(header)
             #f.write(seq)

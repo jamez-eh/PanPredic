@@ -74,22 +74,22 @@ def panseq(query_dict):
     if pan_list:
         #build the fasta file required as a queryfile for the pan run
         query_file = build_pan(pan_list)
-        print('QUERYFILE COUNT PRE JOIN: \n')
-        print(sequence_counter(query_file))
+        #print('QUERYFILE COUNT PRE JOIN: \n')
+        #print(sequence_counter(query_file))
 
 
         #run panseq to find novel pangenome regions
         novel = subprocess.Popen(["panseq", novel_config], stdout=sys.stdout)
         novel.communicate()
 
-        print('NOVEL REGIONS COUNT: \n')
-        print(sequence_counter('/home/james/backend/app/modules/PanPredic/tests/data/novelResults/novelRegions.fasta'))
+        #print('NOVEL REGIONS COUNT: \n')
+        #print(sequence_counter('/home/james/backend/app/modules/PanPredic/tests/data/novelResults/novelRegions.fasta'))
 
 
         # append these pangenome regions to current pangenome fastareference
         join_files(query_file, ROOT_DIR + '/tests/data/novelResults/novelRegions.fasta')
-        print('QUERYFILE COUNT POST JOIN: \n')
-        print(sequence_counter(query_file))
+        #print('QUERYFILE COUNT POST JOIN: \n')
+        #print(sequence_counter(query_file))
 
     #finds a full set of pangenome regions for the queried genomes
             
