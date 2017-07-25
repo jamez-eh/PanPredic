@@ -1,5 +1,5 @@
 from modules.PanPredic.definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS
-from modules.PanPredic.queries import check_panseq
+#from modules.PanPredic.queries import check_panseq
 import os
 from platform import system
 import subprocess
@@ -12,7 +12,7 @@ def program_loc():
 
     cmd = "where" if system() == "Windows" else "which"
     try:
-        '''
+      
         muscle = subprocess.check_output([cmd, 'muscle'])
         mummer = subprocess.check_output([cmd, 'mummer'])
         blast = subprocess.check_output([cmd, 'blastn'])
@@ -30,7 +30,7 @@ def program_loc():
         muscle = '/opt/conda/envs/backend/bin/'
         mummer = '/opt/conda/envs/backend/bin/'
         blast = '/opt/conda/envs/backend/bin/'
-
+        '''
         return muscle, mummer, blast
 
 
@@ -68,7 +68,7 @@ def gen_match(genome_files):
 
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'baseDirectory  '  +  PAN_RESULTS.encode() + b'\n',
-                    b'numberOfCores	4 \n',
+                    b'numberOfCores	20 \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
                     b'blastDirectory ' + blast.encode() +  '\n',
                     b'minimumNovelRegionSize	500 \n',
@@ -82,11 +82,11 @@ def gen_match(genome_files):
                     b'overwrite 1 \n',
                      b'sha1 1 \n']
 
-    pan_list = check_panseq()
+   # pan_list = check_panseq()
 
 
-    if pan_list:
-        settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
+    #if pan_list:
+    #    settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
 
 
 

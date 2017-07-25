@@ -8,7 +8,8 @@ from modules.PanPredic.definitions import ROOT_DIR
 import sys 
 
 import os
-from  modules.PanPredic.grapher import get_URIs
+from modules.PanPredic.pan_utils import get_URIs
+
 import pickle
 
 from modules.PanPredic.pan_utils import contig_name_parse
@@ -64,7 +65,9 @@ def parse_pan(file):
 
 
 def pickler(file, query_files):
-
+    '''
+    This is creates a pickle to pass to the front end.............. (which we aren't doing)
+    '''
     df = pd.read_csv(file, sep=None)
     os.remove(file)
 
@@ -105,6 +108,7 @@ def pickler(file, query_files):
 # turn a datafarame to a list of rows lists
 def pan_to_dict(file, hash_dict):
     """
+     
     :param:
         A pandas dataframe from panseq
     :return: 
@@ -114,6 +118,69 @@ def pan_to_dict(file, hash_dict):
     df = pd.read_csv(file, sep=None)
     #don't remove the file if pickle is going to be called in workflow
     #os.remove(file)
+
+    # used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
+    '''
+    previous_pan = False
+    if query_panseq(): 
+        previous_pan = True
+    '''
+    genome_dict = {}
+
+    for row in df.iterrows():
+        index, data = row
+        pan_list = data.tolist()
+        row_dict = {}
+
+        # the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
+        # The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
+
+
+        # Because of how panseq names outputs we have an optional parse here, that if there is a queryfile for a previous pangenome then we must take the locusID from the locusName in pan_genome.txt
+        '''
+        if previous_pan:
+            row_dict['GENE_NAME'] = resolve_locus(pan_list[1])
+        else:
+
+        '''
+        row_dict['GENE_NAME'] = str(pan_list[0])
+
+        row_dict['START'] = pan_list[2]
+        row_dict['STOP'] = pan_list[3]
+
+        # parse name to accession number
+        contig_name = contig_name_parse(pan_list[4])
+
+        genome = pan_list[1]
+
+        # replace genome name with genome URI
+        if genome in hash_dict:
+            genome = hash_dict[genome]
+
+        if genome in genome_dict:
+
+            if contig_name in genome_dict[genome]:
+                genome_dict[genome][contig_name].append(row_dict)
+
+            else:
+                genome_dict[genome][contig_name] = [row_dict]
+        else:
+            genome_dict[genome] = {contig_name: []}
+            genome_dict[genome][contig_name] = [row_dict]
+
+    return genome_dict
+
+def categorizer(file):
+    """
+     
+    :param:
+        A pandas dataframe from panseq
+    :return: 
+        A dict that only needs {genome : [locusID, ............], .........}
+    """
+    df = pd.read_csv(file, sep=None)
+    #don't remove the file if pickle is going to be called in workflow
+    os.remove(file)
 
     # used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
     '''
@@ -259,7 +326,7 @@ def workflow(pan_file, seq_file, query_files):
     pan_dict = pan_to_dict(parsed_file, hash_dict)
 
     #make a pickle for the front end (beautify)
-    pickle = pickler(parsed_file, query_files)
+    #pickle = pickler(parsed_file, query_files)
 
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
@@ -267,3 +334,8 @@ def workflow(pan_file, seq_file, query_files):
     return final_dict
 
 
+def cmd_workflow(pan_file):
+
+    parsed_file = parse_pan(pan_file)
+
+    return parsed_file

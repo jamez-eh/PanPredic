@@ -41,6 +41,8 @@ def pan(args_dict, pickle_file):
 
     pickle.dump(results_dict, open(pickle_file, 'wb'))
 
+    print(results_dict)
+
     #now the graph is created in grapher, the same function that runs this queue
 
     # (4) create graph

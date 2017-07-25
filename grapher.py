@@ -105,7 +105,10 @@ def get_URIs(dir):
     return hash_dict
 
 def create_graph(dict):
-
+    '''
+    param: dict
+    uploads the pangenome dictionary to blazegraph by parsing the dict and calling parse_gene_dict and upload_graph
+    '''
     graph = generate_graph()
     for region in dict:
         for genomeURI in dict[region]:

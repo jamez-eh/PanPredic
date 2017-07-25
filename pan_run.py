@@ -2,9 +2,8 @@ import subprocess
 import sys
 import shutil
 from modules.PanPredic.definitions import ROOT_DIR
-from modules.PanPredic.queries import query_panseq
+#from modules.PanPredic.queries import query_panseq
 import os
-from modules.PanPredic.pandas_parsing import sequence_counter
 from platform import system
 from datetime import datetime
 
@@ -68,6 +67,7 @@ def panseq(query_dict):
     novel_config = str(query_dict['novel'])
 
     #TODO: make this query safe for very large lists (with more genomes this will break)
+    '''
     pan_list = query_panseq()
 
 
@@ -92,16 +92,16 @@ def panseq(query_dict):
         #print(sequence_counter(query_file))
 
     #finds a full set of pangenome regions for the queried genomes
-            
+    '''        
     match = subprocess.Popen(['panseq', match_config], stdout=sys.stdout)
 
 
     match.communicate()
 
-
+    '''
     if pan_list:
         os.remove(query_file)
-
+    '''
     
 
 
