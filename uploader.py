@@ -112,6 +112,7 @@ def pan_to_dict(file, hash_dict):
     :param:
         A pandas dataframe from panseq
     :return: 
+
         A dictionary in the format for superphy to accept to add to blazegraph 
         ex. {'Some_Contig_ID':[{'START','STOP','ORIENTATION','GENE_NAME'}, {}, ....], etc}
     """
@@ -182,54 +183,21 @@ def categorizer(file):
     #don't remove the file if pickle is going to be called in workflow
     os.remove(file)
 
-    # used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
-    '''
-    previous_pan = False
-    if query_panseq(): 
-        previous_pan = True
-    '''
     genome_dict = {}
 
     for row in df.iterrows():
         index, data = row
         pan_list = data.tolist()
-        row_dict = {}
 
-        # the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
-        # The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
-
-
-        # Because of how panseq names outputs we have an optional parse here, that if there is a queryfile for a previous pangenome then we must take the locusID from the locusName in pan_genome.txt
-        '''
-        if previous_pan:
-            row_dict['GENE_NAME'] = resolve_locus(pan_list[1])
-        else:
-
-        '''
-        row_dict['GENE_NAME'] = str(pan_list[0])
-
-        row_dict['START'] = pan_list[2]
-        row_dict['STOP'] = pan_list[3]
-
-        # parse name to accession number
-        contig_name = contig_name_parse(pan_list[4])
-
+        pan_region = str(pan_list[0])
         genome = pan_list[1]
 
-        # replace genome name with genome URI
-        if genome in hash_dict:
-            genome = hash_dict[genome]
-
         if genome in genome_dict:
+            genome_dict[genome].append(pan_region)
 
-            if contig_name in genome_dict[genome]:
-                genome_dict[genome][contig_name].append(row_dict)
-
-            else:
-                genome_dict[genome][contig_name] = [row_dict]
         else:
-            genome_dict[genome] = {contig_name: []}
-            genome_dict[genome][contig_name] = [row_dict]
+            genome_dict[genome] = []
+            genome_dict[genome] = [pan_region]
 
     return genome_dict
 
@@ -337,5 +305,6 @@ def workflow(pan_file, seq_file, query_files):
 def cmd_workflow(pan_file):
 
     parsed_file = parse_pan(pan_file)
-
-    return parsed_file
+    pan_dict = categorizer(parsed_file)
+    print(pan_dict)
+    return pan_dict
