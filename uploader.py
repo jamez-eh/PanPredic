@@ -184,22 +184,23 @@ def categorizer(file):
     os.remove(file)
 
     genome_dict = {}
-
+    pangenome = []
     for row in df.iterrows():
         index, data = row
         pan_list = data.tolist()
 
         pan_region = str(pan_list[0])
         genome = pan_list[1]
-
+        print(genome)
         if genome in genome_dict:
             genome_dict[genome].append(pan_region)
-
+        if pan_region not in pangenome:
+            pangenome.append(pan_region)
         else:
             genome_dict[genome] = []
             genome_dict[genome] = [pan_region]
 
-    return genome_dict
+    return genome_dict, pangenome
 
 
 def get_sequence_dict(file):
@@ -271,7 +272,6 @@ def hash_merge(hash_dict, pan_dict):
         pan_dict[hash_dict[contig]] = pan_dict[contig]
         del pan_dict[contig]
 
-
     return pan_dict
 
 
@@ -305,6 +305,6 @@ def workflow(pan_file, seq_file, query_files):
 def cmd_workflow(pan_file):
 
     parsed_file = parse_pan(pan_file)
-    pan_dict = categorizer(parsed_file)
-    print(pan_dict)
-    return pan_dict
+    pan_dict, pangenome = categorizer(parsed_file)
+
+    return pan_dict, pangenome
