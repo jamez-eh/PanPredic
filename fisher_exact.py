@@ -71,4 +71,3 @@ def fishers():
     #reject, p = multipletests(p_matrix, alpha=0.05, method='fdr_bh')
     return p_matrix
 
-fishers()

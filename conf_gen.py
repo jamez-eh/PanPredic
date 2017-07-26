@@ -12,7 +12,7 @@ def program_loc():
 
     cmd = "where" if system() == "Windows" else "which"
     try:
-      
+        '''
         muscle = subprocess.check_output([cmd, 'muscle'])
         mummer = subprocess.check_output([cmd, 'mummer'])
         blast = subprocess.check_output([cmd, 'blastn'])
@@ -30,7 +30,7 @@ def program_loc():
         muscle = '/opt/conda/envs/backend/bin/'
         mummer = '/opt/conda/envs/backend/bin/'
         blast = '/opt/conda/envs/backend/bin/'
-        '''
+        
         return muscle, mummer, blast
 
 
@@ -103,6 +103,6 @@ def generate_conf(genome_files):
     query_dict['novel'] = gen_novel(genome_files)
     query_dict['match'] = gen_match(genome_files)
 
-    print('james_debug: conffiles: ' + str(query_dict))
+    
     return query_dict
 
