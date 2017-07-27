@@ -68,7 +68,7 @@ def gen_match(genome_files):
 
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'baseDirectory  '  +  PAN_RESULTS.encode() + b'\n',
-                    b'numberOfCores	20 \n',
+                    b'numberOfCores	1  \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
                     b'blastDirectory ' + blast.encode() +  '\n',
                     b'minimumNovelRegionSize	500 \n',

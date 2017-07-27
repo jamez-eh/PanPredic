@@ -1,4 +1,3 @@
-
 from Bio import SeqIO
 import pandas as pd
 import json
@@ -321,6 +320,6 @@ def workflow(pan_file, seq_file, query_files):
 def cmd_workflow(pan_file):
 
     parsed_file = cmd_parse_pan(pan_file)
-    pan_dict, pangenome = categorizer(parsed_file)
+    pan_dict = categorizer(parsed_file)
 
-    return pan_dict, pangenome
+    return pan_dict

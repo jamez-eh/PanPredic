@@ -1,5 +1,6 @@
 from modules.PanPredic.queries import gen_pan, pan_names, get_virulence, vir_names, get_genomes
 
+import re
 
 def eval_vectors(gen_pan, pan_genome):
     '''
@@ -78,3 +79,16 @@ def get_vectors(region):
             y.append(0)
 
     return X, y
+
+
+def bovinator(pan_dict):
+    index = 0
+    label_list = []
+    for genome in pan_dict:
+        if re.search('(?<=\|)H', genome):
+            label_list.append(0)
+
+        else:
+            label_list.append(1)
+
+        
