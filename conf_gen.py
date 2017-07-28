@@ -67,7 +67,7 @@ def gen_match(genome_files):
 
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'baseDirectory  '  +  PAN_RESULTS.encode() + b'\n',
-                    b'numberOfCores	20 \n',
+                    b'numberOfCores	10 \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
                     b'blastDirectory ' + blast.encode() +  '\n',
                     b'muscleExecutable ' + muscle + '\n',
@@ -98,7 +98,7 @@ def gen_match_pred(genome_files):
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'baseDirectory  '  +  PAN_RESULTS.encode() + b'_pred\n',
                      b'queryFile    ' + PAN_RESULTS.encode() + b'/Data/accessoryGenomeFragments.fasta',
-                    b'numberOfCores	20  \n',
+                    b'numberOfCores	10  \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
                     b'blastDirectory ' + blast.encode() +  '\n',
                     b'muscleExecutable ' + muscle + '\n',
