@@ -2,7 +2,7 @@ from sklearn import svm
 from sklearn.naive_bayes import BernoulliNB
 
 from modules.PanPredic.queries import get_genomes
-from modules.PanPredic.data_shape import get_data, get_vectors
+from modules.PanPredic.data_shape import get_data, get_vectors, bovinator
 import pickle
 
 
@@ -53,3 +53,16 @@ def bayes_predict(region, genome_vector):
     return clf.predict(genome_vector)
 
 
+
+def svm_bovine(pan_dict):
+
+    '''
+    for bovine/human set only, returns a clf after fitting with data.
+    '''
+    X,y = bovinator(pan_dict)
+
+    clf = svm.SVC()
+
+    clf.fit(X,y)
+
+    return clf

@@ -103,6 +103,10 @@ def panseq(query_dict):
         os.remove(query_file)
     '''
     
+def cmd_prediction(conf_file):
+    
+    novel = subprocess.Popen(["panseq", conf_file], stdout=sys.stdout)
+    novel.communicate()
 
 
 #TODO: protect this from large files (don't read all of it into memory) ->do with pandas

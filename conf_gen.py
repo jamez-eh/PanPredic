@@ -68,7 +68,7 @@ def gen_match(genome_files):
 
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'baseDirectory  '  +  PAN_RESULTS.encode() + b'\n',
-                    b'numberOfCores	1  \n',
+                    b'numberOfCores	5  \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
                     b'blastDirectory ' + blast.encode() +  '\n',
                     b'minimumNovelRegionSize	500 \n',
@@ -85,15 +85,46 @@ def gen_match(genome_files):
    # pan_list = check_panseq()
 
 
-    #if pan_list:
+    #if pan_list and not cmd:
     #    settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
-
 
 
 
     with open(ROOT_DIR + '/panseq_pan_pangenome.conf', 'wb') as f:
         f.writelines(settings_list)
         return ROOT_DIR + '/panseq_pan_pangenome.conf'
+
+def gen_match_pred(genome_files):
+    muscle, mummer, blast = program_loc()
+
+    settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
+                    b'baseDirectory  '  +  PAN_RESULTS.encode() + b'_pred\n',
+                     b'queryFile    ' + PAN_RESULTS.encode() + + b'/Data/accessoryGenomeFragments.fasta',
+                    b'numberOfCores	5  \n',
+                    b'mummerDirectory '	+ mummer.encode() + '\n',
+                    b'blastDirectory ' + blast.encode() +  '\n',
+                    b'minimumNovelRegionSize	500 \n',
+                    b'muscleExecutable ' + muscle + '\n',
+                    b'novelRegionFinderMode	no_duplicates \n',
+                    b'fragmentationSize	500 \n',
+                    b'percentIdentityCutoff	90 \n',
+                    b'coreGenomeThreshold   1000000000 \n',
+                    b'runMode	pan \n',
+                    b'nameOrId	id \n',
+                    b'overwrite 1 \n',
+                     b'sha1 1 \n']
+
+   # pan_list = check_panseq()
+
+
+    #if pan_list and not cmd:
+    #    settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
+
+
+
+    with open(ROOT_DIR + '/panseq_pred_pangenome.conf', 'wb') as f:
+        f.writelines(settings_list)
+        return ROOT_DIR + '/panseq_pred_pangenome.conf'
 
 #driver function generates both necessary conf files
 def generate_conf(genome_files):

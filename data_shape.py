@@ -83,12 +83,15 @@ def get_vectors(region):
 
 def bovinator(pan_dict):
     index = 0
-    label_list = []
+    y = []
+    X = []
     for genome in pan_dict:
         if re.search('(?<=\|)H', genome):
-            label_list.append(0)
+            y.append(0)
 
         else:
-            label_list.append(1)
-
-        
+            y.append(1)
+            
+        X.append(pan_dict[genome]['values'])
+                
+    return X, y
