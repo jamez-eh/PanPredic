@@ -1,4 +1,5 @@
 from sklearn import svm
+from sklearn.feature_selection import VarianceThreshold
 from sklearn.naive_bayes import BernoulliNB
 
 from modules.PanPredic.queries import get_genomes
@@ -61,8 +62,13 @@ def svm_bovine(pan_dict):
     '''
     X,y = bovinator(pan_dict)
 
+    #select features with a high amount of variance
+
     clf = svm.SVC()
+
+    sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
+    sel.fit_transform(X)
 
     clf.fit(X,y)
 
-    return clf
+    return clf, sel
