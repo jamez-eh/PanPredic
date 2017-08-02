@@ -30,6 +30,7 @@ def cmd_parse_pan(file):
 
     return ROOT_DIR + '/tests/data/genparsed.txt'
 
+
 def categorizer(file):
     """
      
@@ -38,25 +39,31 @@ def categorizer(file):
     :return: 
         A dict that only needs {genome : {values: [0, 1, 0, 1, 0, 0 ............]}, .........}
     """
-    df = pd.read_csv(file, sep=None)
+    df = pd.read_csv(file, sep=None, header=None)
     #don't remove the file if pickle is going to be called in workflow
     os.remove(file)
+    
 
     genome_dict = {}
     pangenome = []
     for row in df.iterrows():
+
         index, data = row
         pan_list = data.tolist()
 
         value = pan_list[1]
         genome = pan_list[0]
-        
+  
         if genome in genome_dict:
             genome_dict[genome]['values'].append(value)
 
         else:
             genome_dict[genome] = {'values': []}
             genome_dict[genome]['values'].append(value)
+        print(genome)
+        print('length')
+        print(len(genome_dict[genome]['values']))
+              
     return genome_dict
 
 
@@ -66,3 +73,6 @@ def cmd_workflow(pan_file):
     pan_dict = categorizer(parsed_file)
 
     return pan_dict
+
+
+

@@ -66,7 +66,7 @@ def pickler(file, query_files):
     '''
     This is creates a pickle to pass to the front end.............. (which we aren't doing)
     '''
-    df = pd.read_csv(file, sep=None)
+    df = pd.read_csv(file, sep=None, header=None)
     os.remove(file)
 
 
@@ -114,9 +114,9 @@ def pan_to_dict(file, hash_dict):
         A dictionary in the format for superphy to accept to add to blazegraph 
         ex. {'Some_Contig_ID':[{'START','STOP','ORIENTATION','GENE_NAME'}, {}, ....], etc}
     """
-    df = pd.read_csv(file, sep=None)
+    df = pd.read_csv(file, sep=None, header=None)
     #don't remove the file if pickle is going to be called in workflow
-    #os.remove(file)
+    os.remove(file)
 
     # used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
     '''

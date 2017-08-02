@@ -1,4 +1,5 @@
 from modules.PanPredic.queries import gen_pan, pan_names, get_virulence, vir_names, get_genomes
+import numpy as np
 
 import re
 
@@ -86,12 +87,20 @@ def bovinator(pan_dict):
     y = []
     X = []
     for genome in pan_dict:
-        if re.search('(?<=\|)H', genome):
-            y.append(0)
+        print genome
+        
+        if len(pan_dict[genome]['values']) == 14526:
+            print('HERE')
+            print '66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666'
+              
+        if re.search('W', genome):
+            y.append(1)
 
         else:
-            y.append(1)
-            
+            y.append(0)
+        print(y)    
+
         X.append(pan_dict[genome]['values'])
-                
-    return X, y
+
+
+    return np.array(X), np.array(y)
