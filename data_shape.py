@@ -83,24 +83,18 @@ def get_vectors(region):
 
 
 def bovinator(pan_dict):
+    print("assigning values")
     index = 0
     y = []
     X = []
     for genome in pan_dict:
-        print genome
-        
-        if len(pan_dict[genome]['values']) == 14526:
-            print('HERE')
-            print '66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666'
-              
         if re.search('W', genome):
             y.append(1)
 
         else:
             y.append(0)
-        print(y)    
 
         X.append(pan_dict[genome]['values'])
 
-
+    print("done assinging values")
     return np.array(X), np.array(y)

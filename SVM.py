@@ -1,4 +1,8 @@
 from sklearn import svm
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import classification_report
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.naive_bayes import BernoulliNB
 from sklearn.model_selection import cross_val_score
@@ -66,37 +70,82 @@ def svm_bovine(pan_dict):
     for bovine/human set only, returns a clf after fitting with data.
     '''
     X,y = bovinator(pan_dict)
-
+    
     # an additional svm is made here, used only to analyze feature selection
-    svc = SVC(kernel="linear")
+    svc = SVC(kernel="linear", C=0.01)
+    svc_rbf = SVC(kernel="rbf")
+    svc_poly = SVC(kernel="poly")
+
+    cross_val_variance(svc, X, y, 10)
+
+   
+
+   
     #recursive feature selection and graph
+    '''
     rfecv = RFECV(estimator=svc, step=1, cv=StratifiedKFold(2),
                                 scoring='accuracy')
 
     
 
     
-    #rfecv.fit(X, y)
-    #opt_feature_num(rfecv)
+    rfecv.fit(X, y)
+    opt_feature_num(rfecv)
+    '''
+    param_opt(X, y)
 
 
-
-
-    #select features with a high amount of variance
-    sel = VarianceThreshold(threshold=(.8 * (1 - .8)))
-    #sel.fit_transform(X)
-    #sel.fit_transform(y)
-
-    print(np.unique(map(len, X)))
-    clf = svm.SVC(kernel='linear')
-    #cross validation of clf with the parameters above (including feature selection
-    #scores = cross_val_score(
-    #    clf, X, y, cv=5)
-    
     clf.fit(X,y)
 
     
     return clf, sel
+
+def param_opt(X, y):
+
+    param_range = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+
+    param_grid = [{'C': param_range,
+                   'kernel': ['linear']},
+                  {'C': param_range,
+                   'gamma': param_range,
+                   'kernel' : ['rbf']}]
+    
+    gs = GridSearchCV(estimator=SVC(C=1),
+                      param_grid = param_grid,
+                      scoring='accuracy',
+                      cv=10,
+                      n_jobs=-1)
+    gs = gs.fit(X, y)
+    print(gs.best_score_)
+    print(gs.best_params_)
+
+def cross_val_variance(model, X, y, cv):
+    print(X.shape[1])
+
+    var = 0.0
+    best = 0.0
+    while (var < 0.5):
+        print(var)
+        #select features with a high amount of variance
+        sel = VarianceThreshold(threshold=(var * (1 - var)))
+        X_sel = sel.fit_transform(X)
+        print(X_sel.shape[1])
+    
+
+    
+        clf = svm.SVC(kernel='linear')
+        #cross validation of clf with the parameters above (including feature selection
+        scores = cross_val_score(
+            model, X_sel, y, cv=10)
+
+        print(scores)
+        average = sum(scores)/len(scores)
+        print('Average: ' + str(average))
+        if average > best:
+            best = average
+        print('Best: ' + str(best))
+        var = var + 0.01
+    
 
 
 

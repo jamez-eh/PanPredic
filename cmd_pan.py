@@ -12,7 +12,7 @@ from pan_run import cmd_prediction
 
 pickle_file = ROOT_DIR + '/hbpickles.p'
 clf_pickle = ROOT_DIR +'/clfpickle.p'
-
+pred_pickle = ROOT_DIR+ '/predpickle.p'
 
 def pan(args_dict):
     
@@ -29,7 +29,7 @@ def pan(args_dict):
     # (1) generate conf files, these specify locations of genomes as well as panseq run parameters
     #stores them in a dictionary {novel: conf_file, match: conf_file}
     query_dict = generate_conf(query_files)
-    pred_conf = gen_match_pred(prediction_files)
+    
     
 
     # (2) run panseq
@@ -47,19 +47,19 @@ def parse():
 
     return results_dict    
 
-def prediction(results_dict):
+def prediction(results_dict, prediction_files):
     
     # (5) prediction
-    
+
     clf, sel = svm_bovine(results_dict)
     pickle.dump(clf, open(clf_pickle, 'wb'))
 
-
+    pred_conf = gen_match_pred(prediction_files)
 
     #run panseq against training set with predicting set
     cmd_prediction(pred_conf)
     #parse predicting pangenome
-    prediction_dict = cmd_worflow(PAN_RESULTS + '_pred/pan_genome.txt')
+    prediction_dict = cmd_workflow(PAN_RESULTS + '_pred/pan_genome.txt')
     pickle.dump(prediction_dict, open(pred_pickle, 'wb'))
 
     for genome in prediction_dict:
@@ -74,15 +74,17 @@ def prediction(results_dict):
     #test_files = os.listdir(prediction_files):
     #test_syms = sym_linker(test_files)
 
-'''    
+
 #parse()
 
 the_pickle = open(ROOT_DIR + '/hbpickles.p', 'rb')
+print("loading pickle")
 #the_pickle.seek(0)
 results_dict = pickle.load(the_pickle)
 the_pickle.close()
 
-prediction(results_dict)
+print("pickle loaded")
+prediction(results_dict, '/home/james/HB')
 '''
     
 
@@ -114,3 +116,4 @@ if __name__ == "__main__":
 
 
 
+'''

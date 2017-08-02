@@ -60,9 +60,6 @@ def categorizer(file):
         else:
             genome_dict[genome] = {'values': []}
             genome_dict[genome]['values'].append(value)
-        print(genome)
-        print('length')
-        print(len(genome_dict[genome]['values']))
               
     return genome_dict
 
