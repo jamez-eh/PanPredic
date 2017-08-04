@@ -72,30 +72,19 @@ def svm_bovine(pan_dict):
     X,y = bovinator(pan_dict)
     
     # an additional svm is made here, used only to analyze feature selection
-    svc = SVC(kernel="linear", C=0.01)
-    svc_rbf = SVC(kernel="rbf")
-    svc_poly = SVC(kernel="poly")
-
-    cross_val_variance(svc, X, y, 10)
-
-   
-
-   
-    #recursive feature selection and graph
-    '''
-    rfecv = RFECV(estimator=svc, step=1, cv=StratifiedKFold(2),
-                                scoring='accuracy')
-
+    svm = param_opt(X, y)
+    
+    #svc = SVC(kernel="linear", C=0.01)
+    #svc_rbf = SVC(kernel="rbf", C=100.0, gamma=0.0001)
     
 
+    cross_val_variance(svm, X, y, 10)
+
+    #cross_val_variance(svc_rbf, X, y, 10)
     
-    rfecv.fit(X, y)
-    opt_feature_num(rfecv)
-    '''
-    param_opt(X, y)
+    #recursive_selection(svc, X, y)
 
-
-    clf.fit(X,y)
+    svm.fit(X,y)
 
     
     return clf, sel
@@ -117,36 +106,65 @@ def param_opt(X, y):
                       n_jobs=-1)
     gs = gs.fit(X, y)
     print(gs.best_score_)
-    print(gs.best_params_)
+    params = gs.best_params_
+    print(params)
+    
+    if params['kernel'] == 'linear':
+        return SVC(kernel=params['kernel'], C=params['C'])
+    else:
+        return SVC(kernel=params['kernel'], C=params['C'], gamma=params['gamma'])
 
 def cross_val_variance(model, X, y, cv):
     print(X.shape[1])
 
     var = 0.0
     best = 0.0
-    while (var < 0.5):
-        print(var)
+    best_var = 0.0
+
+    while (var < 0.25):
+      
         #select features with a high amount of variance
         sel = VarianceThreshold(threshold=(var * (1 - var)))
         X_sel = sel.fit_transform(X)
-        print(X_sel.shape[1])
-    
-
     
         clf = svm.SVC(kernel='linear')
         #cross validation of clf with the parameters above (including feature selection
         scores = cross_val_score(
             model, X_sel, y, cv=10)
 
-        print(scores)
+      
         average = sum(scores)/len(scores)
-        print('Average: ' + str(average))
+      
         if average > best:
             best = average
-        print('Best: ' + str(best))
-        var = var + 0.01
-    
+            best_var = var
+            best_sel = sel
+        
+        var = var + 0.001
 
+    print('Best CV: ' + str(best))
+    print('Best var: ' + str(best_var))
+    
+def recursive_selection(model, X, y):
+    '''
+    runs recursive feature selection for the selected model
+    '''
+    rfecv = RFECV(estimator=model, step=1, cv=StratifiedKFold(2),
+                  scoring='accuracy')
+
+    rfecv.fit(X,y)
+
+
+    print("Optimal number of features : %d" % rfecv.n_features_)
+
+    '''
+    plt.figure()
+    plt.xlabel("Number of features selected")
+    plt.ylabel("Cross validation score (nb of correct classifications)")
+    plt.plot(range(1, len(rfecv.grid_scores_) + 1), rfecv.grid_scores_)
+    plt.show()
+
+    '''
 
 
 #takes the coefficents from coef_ in linear SVM and then 

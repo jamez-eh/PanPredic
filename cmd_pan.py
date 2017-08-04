@@ -1,30 +1,48 @@
 import os
 from modules.PanPredic.SVM import svm_bovine
 from modules.PanPredic.cmd_uploader import cmd_workflow
-from modules.PanPredic.pan_run import panseq, sym_linker
+from modules.PanPredic.pan_run import panseq
 from modules.PanPredic.conf_gen import generate_conf, gen_match_pred
 from modules.PanPredic.definitions import PAN_RESULTS
+from modules.PanPredic.pan_utils import sym_linker, tagger, dir_merge
 import cPickle as pickle
 from datetime import datetime
 from modules.PanPredic.definitions import ROOT_DIR
 from pan_run import cmd_prediction
-
+import shutil
 
 pickle_file = ROOT_DIR + '/hbpickles.p'
 clf_pickle = ROOT_DIR +'/clfpickle.p'
 pred_pickle = ROOT_DIR+ '/predpickle.p'
 
+
 def pan(args_dict):
     
+    print('root : '+ ROOT_DIR)
+    
+    query_pos = args_dict['p']
 
-    query_files = args_dict['i']
-    prediction_files = args_dict['q']
-    pickle_file = ROOT_DIR + '/hbpickles.p'
+    query_neg = args_dict['n']
 
-    pred_pickle = ROOT_DIR+ '/predpickle.p'
-    #create a unique filename
     now = datetime.now()
     now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    
+    query_files = query_pos + '/copies_' + now
+    os.mkdir(query_files)
+    tagger(query_pos, '_pos', query_files)
+    tagger(query_neg, '_neg', query_files)
+
+
+    
+    
+
+    prediction_files = args_dict['q']
+    
+
+    #create a unique filename
+    
+
+
 
     # (1) generate conf files, these specify locations of genomes as well as panseq run parameters
     #stores them in a dictionary {novel: conf_file, match: conf_file}
@@ -34,9 +52,11 @@ def pan(args_dict):
 
     # (2) run panseq
     panseq(query_dict)
-
+    shutil.rmtree(query_files)
+    
+    
     results = parse()
-    prediction(results)
+    prediction(results, prediction_files)
     
 def parse():
     # (3) Parse panseq results
@@ -76,7 +96,7 @@ def prediction(results_dict, prediction_files):
 
 
 #parse()
-
+'''
 the_pickle = open(ROOT_DIR + '/hbpickles.p', 'rb')
 print("loading pickle")
 #the_pickle.seek(0)
@@ -94,13 +114,18 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-i",
-        help="directory of FASTA files",
+        "-p",
+        help="directory of FASTA files, positive for trait",
+        required=True
+        )
+    parser.add_argument(
+        "-n",
+        help="directory of FASTA files, negative for trait",
         required=True
         )
     parser.add_argument(
         "-q",
-        help="directory of files to make predictions for",
+        help="directory of FASTA files, to make predictions for",
         required=True
         )
     
@@ -110,10 +135,11 @@ if __name__ == "__main__":
     
     
     print(args_dict)
-    args_dict['i'] = os.path.abspath(args_dict['i'])
+    args_dict['p'] = os.path.abspath(args_dict['p'])
+    args_dict['n'] = os.path.abspath(args_dict['n'])
+    args_dict['q'] = os.path.abspath(args_dict['q'])
 
     print(pan(args_dict))
 
 
 
-'''

@@ -1,8 +1,11 @@
+from datetime import datetime
 from Bio import SeqIO
+import subprocess
+from os.path import basename
 import re
 import os
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
-
+from modules.PanPredic.definitions import ROOT_DIR
 def generate_hash(filename):
 
     """
@@ -66,6 +69,7 @@ def get_fasta_header_from_file(filename):
     """
 
     for record in SeqIO.parse(filename, "fasta"):
+        print(record.description)
         return record.description
 
 def get_genome_name(header):
@@ -100,6 +104,7 @@ def get_genome_name(header):
 
     # if nothing matches, use the full header as genome_name
     genome_name = header
+    print header
     for rep in re_patterns:
         m = rep.search(header)
 
@@ -108,3 +113,71 @@ def get_genome_name(header):
             break
 
     return str(genome_name)
+
+
+
+def tagger(dir, tag, dst):
+    '''
+    params: dir: directory of fasta files with header to alter
+    params: tag: if it is a positive or negative tag
+    '''
+    print('tagger')
+    for original_file in os.listdir(dir):
+        if original_file.endswith('.fna') or original_file.endswith('.fasta'):
+            print('is_file')
+            current_file = dir + '/' + original_file
+            genome_name = basename(current_file)
+            genome = os.path.splitext(genome_name)[0]
+        
+            original, edit = open(dir + '/' + original_file), open(dst + '/'  + genome +  '.fasta', 'w+')
+            print('EDIT: ' + str(edit))
+            contig_index = 1
+
+            for line in original:
+                if line.startswith('>'):
+                    newname= '>lcl|' + genome + '|contig' + str(contig_index) + '\n'
+                    edit.write(newname)
+                    contig_index = contig_index + 1
+                else:
+                    edit.write(line)
+            
+            original.close()
+            edit.close()
+    
+
+def dir_merge(dir_one, dir_two):
+    '''
+    merges two directories into a list of all the files
+    '''
+
+    return os.listdir(dir_one) + os.listdir(dir_two)
+
+
+#TODO: add src to definitions and dst to definitions
+def sym_linker(file_list, dst):
+    '''
+    Creates a subdirectory in the query directory with symlinks to all the fasta files, 
+    necessary for panseq to run with all the junk that other process place in the query dir
+    :param a list of files
+    :param dst: destination directory
+    :return: source directory
+    '''
+    now = datetime.now()
+    now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
+
+    try:
+        os.mkdir(dst)
+    except:
+        print(dst + ' already exists')
+
+
+    for file in file_list:
+        if file.endswith('.fna') or file.endswith('.fasta'):
+            try:
+                os.symlink(file, dst + '/' + os.path.basename(file))
+            except:
+                print(dst + '/' + file +' already exists')
+
+
+    return dst
+

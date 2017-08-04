@@ -39,8 +39,8 @@ def categorizer(file):
     :return: 
         A dict that only needs {genome : {values: [0, 1, 0, 1, 0, 0 ............]}, .........}
     """
-    df = pd.read_csv(file, sep=None, header=None)
-    #don't remove the file if pickle is going to be called in workflow
+    df = pd.read_csv(file, sep='\t', header=None)
+
     os.remove(file)
     
 
