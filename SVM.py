@@ -77,20 +77,35 @@ def svm_bovine(pan_dict):
     #svc = SVC(kernel="linear", C=0.01)
     #svc_rbf = SVC(kernel="rbf", C=100.0, gamma=0.0001)
     
-
-    cross_val_variance(svm, X, y, 10)
+    #get best variance selection
+    sel = cross_val_variance(svm, X, y, 10)
 
     #cross_val_variance(svc_rbf, X, y, 10)
     
     #recursive_selection(svc, X, y)
+    return svm, sel
 
-    svm.fit(X,y)
+def alternator(label_dict):
+    '''
+    hopefully combine this and svm_bovine into one pipeline
+    '''
+
+    print('alternating')
+    
+    for label in label_dict:
+        X = label_dict[label]['X']
+        y = label_dict[label]['y']
+
+        svm = param_opt(X, y)
+        sel = cross_val_variance(svm, X, y, 10)
+
+        return svm, sel
+
 
     
-    return clf, sel
 
 def param_opt(X, y):
-
+    print('optimizing parameters')
     param_range = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
 
     param_grid = [{'C': param_range,
@@ -144,6 +159,8 @@ def cross_val_variance(model, X, y, cv):
 
     print('Best CV: ' + str(best))
     print('Best var: ' + str(best_var))
+
+    return best_sel
     
 def recursive_selection(model, X, y):
     '''

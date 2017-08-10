@@ -62,7 +62,7 @@ def parse():
     # (3) Parse panseq results
     results_dict = cmd_workflow(PAN_RESULTS + '/pan_genome.txt')
     
-
+    pickle_file = ROOT_DIR + '/hbpickles.p'
     pickle.dump(results_dict, open(pickle_file, 'wb'))
 
     return results_dict    
@@ -86,7 +86,7 @@ def prediction(results_dict, prediction_files):
         print(genome)
         X = prediction_dict[genome]['values']
         #must do the same feature selection on training data and on prediction data
-        #sel.fit_transform(X)
+        X = sel.fit_transform(X)
         print(clf.predict(X))
 
 

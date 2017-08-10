@@ -1,4 +1,5 @@
 from datetime import datetime
+import pdb
 from Bio import SeqIO
 import subprocess
 from os.path import basename
@@ -121,16 +122,16 @@ def tagger(dir, tag, dst):
     params: dir: directory of fasta files with header to alter
     params: tag: if it is a positive or negative tag
     '''
-    print('tagger')
+
     for original_file in os.listdir(dir):
         if original_file.endswith('.fna') or original_file.endswith('.fasta'):
-            print('is_file')
+
             current_file = dir + '/' + original_file
             genome_name = basename(current_file)
             genome = os.path.splitext(genome_name)[0]
         
             original, edit = open(dir + '/' + original_file), open(dst + '/'  + genome +  '.fasta', 'w+')
-            print('EDIT: ' + str(edit))
+
             contig_index = 1
 
             for line in original:

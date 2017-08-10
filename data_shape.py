@@ -88,7 +88,7 @@ def bovinator(pan_dict):
     y = []
     X = []
     for genome in pan_dict:
-        if re.search('W', genome):
+        if re.search('_pos', genome):
             y.append(1)
 
         else:
