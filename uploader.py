@@ -3,42 +3,17 @@ import pandas as pd
 import json
 import re
 from modules.PanPredic.definitions import ROOT_DIR
-
+import pdb
 import sys 
 
 import os
 from modules.PanPredic.pan_utils import get_URIs
-
+from modules.turtleGrapher.turtle_utils import slugify
 import pickle
 
 from modules.PanPredic.pan_utils import contig_name_parse
 from hashlib import sha1
 
-'''
-def contig_name_parse(pan_contig):
-    """
-    The panseq contig name is unhelpful
-    :param:
-        a contig named by panseq
-    :return: 
-        the basename of the contig
-    """
-    pan_contig = re.sub('[|]', '', pan_contig)
-
-    if re.search('(.*?)(?=_E)', pan_contig):
-        #m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
-        m = re.search('(.*?)(?=_E)', pan_contig)
-        #m = re.search('(?<=\|).+', m.group(0))
-
-    #elif re.search('(?<=\|).+', pan_contig):
-        #m = re.search('(?<=\|).+', pan_contig)
-        #m = re.search('(?<=\|).+', m.group(0))
-
-    else:
-        return pan_contig
-
-    return m.group(0)
-'''
 
 
 
@@ -118,12 +93,8 @@ def pan_to_dict(file, hash_dict):
     #don't remove the file if pickle is going to be called in workflow
     os.remove(file)
 
-    # used to check if there is a reference pangenome being checked with queryfile, we do this because otherwise we end up giving pangenome regions already in blazegraph new names
-    '''
-    previous_pan = False
-    if query_panseq(): 
-        previous_pan = True
-    '''
+
+
     genome_dict = {}
 
     for row in df.iterrows():
@@ -136,12 +107,7 @@ def pan_to_dict(file, hash_dict):
 
 
         # Because of how panseq names outputs we have an optional parse here, that if there is a queryfile for a previous pangenome then we must take the locusID from the locusName in pan_genome.txt
-        '''
-        if previous_pan:
-            row_dict['GENE_NAME'] = resolve_locus(pan_list[1])
-        else:
 
-        '''
         row_dict['GENE_NAME'] = str(pan_list[0])
 
         row_dict['START'] = pan_list[2]
@@ -201,34 +167,6 @@ def merge_dicts(pan_dict, seq_dict):
     return {'PanGenomeRegion': pan_dict}
 
 
-def json_dump(file, dict):
-    with open(file, 'w') as fp:
-        json.dump(dict, fp)
-
-
-def json_load(file):
-    with open(file) as fp:
-        data = json.load(fp)
-
-    return data
-
-
-
-#generates a hash for a file
-def generate_hash(filename):
-
-    """
-    :param:
-        a file 
-    :return: 
-        sha1 hash
-    """
-
-
-    # the 'b' isn't needed less you run this on Windows
-    with open(filename, 'rb') as f:
-    #  we apply a sort func to make sure the contents are the same,        # regardless of order
-        return sha1(str(sorted(f.readlines())).encode('utf-8')).hexdigest()
 
 
 
@@ -255,6 +193,11 @@ def resolve_locus(locus):
         return locus
 
 def workflow(pan_file, seq_file, query_files):
+    '''
+    param: pan_file: pan_genome.txt
+    param: seq_file : accessorygenome.fasta
+    param: query_files: dir with sequences that generated the pangenome
+    '''
 
 
     hash_dict = get_URIs(query_files)

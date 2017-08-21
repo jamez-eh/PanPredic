@@ -12,7 +12,7 @@ def program_loc():
 
     cmd = "where" if system() == "Windows" else "which"
     try:
-        
+        '''
         muscle = subprocess.check_output([cmd, 'muscle'])
         mummer = subprocess.check_output([cmd, 'mummer'])
         blast = subprocess.check_output([cmd, 'blastn'])
@@ -30,7 +30,7 @@ def program_loc():
         muscle = '/opt/conda/envs/backend/bin/'
         mummer = '/opt/conda/envs/backend/bin/'
         blast = '/opt/conda/envs/backend/bin/'
-        '''
+
         return muscle, mummer, blast
 
 
@@ -54,7 +54,7 @@ def gen_novel(genome_files):
                     b'minimumNovelRegionSize	500 \n',
                     b'novelRegionFinderMode	no_duplicates \n',
                     b'muscleExecutable ' + muscle + '\n',
-                    b'percentIdentityCutoff	95 \n',
+                    b'percentIdentityCutoff	99 \n',
                     b'runMode	novel \n',
                     b'overwrite 1 \n',
                       b'sha1 1 \n'])
@@ -98,7 +98,7 @@ def gen_match_pred(genome_files):
 
     settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
                     b'baseDirectory  '  +  PAN_RESULTS.encode() + b'_pred\n',
-                     b'queryFile    ' + PAN_RESULTS.encode() + b'/Data/accessoryGenomeFragments.fasta',
+                     b'queryFile    ' + PAN_RESULTS.encode() + b'/accessoryGenomeFragments.fasta\n',
                     b'numberOfCores	5  \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
                     b'blastDirectory ' + blast.encode() +  '\n',

@@ -99,7 +99,7 @@ def get_single_region(genome):
 
     }} 
     LIMIT 1
-    """.format(genome = gu(genome))
+    """.format(genome = genome)
     return query
 
 
@@ -116,7 +116,7 @@ def get_genomes(region):
    			?p :hasPart <{region}> .
 
     }}
-    """.format(region = region)
+    """.format(region = gu(region))
     return query
 
 

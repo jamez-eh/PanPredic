@@ -9,6 +9,8 @@ import pdb
 from modules.PanPredic.conf_gen import generate_conf
 from modules.PanPredic.cmd_pan import parse
 from SVM import alternator
+import cPickle as pickle
+from modules.PanPredic.definitions import ROOT_DIR
 '''
 df = pd.read_csv('/home/james/ecoli_omnilog/data/omnilog_data_summary.txt', sep=None)
 
@@ -96,13 +98,18 @@ def get_genome_vectors(dir):
     query_dict = generate_conf('/home/james/renamed_files')
     panseq(query_dict)
     '''
-    results_dict = parse()
+    #results_dict = parse()
     #shutil.rmtree('/home/james/renamed_files')
+    the_pickle = open(ROOT_DIR + '/hbpickles.p', 'rb')
+    print("loading pickle")
+    #the_pickle.seek(0)
+    results_dict = pickle.load(the_pickle)
+    the_pickle.close()
+
     return results_dict
 
-
 def multi_test():
-
+    pickle_file = ROOT_DIR + '/hbpickles.p'
     df = cv_reader()
     labels = label_maker(df)
     genome_vectors = get_genome_vectors('/home/james/sequences')
@@ -129,7 +136,7 @@ def multi_test():
         vector_dict = {'X': np.array(X), 'y': np.array(y)}
         label_vectors[label] = vector_dict
     
-    svm, sel = alternator(label_vectors)
+    alternator(label_vectors)
 
 
 multi_test()

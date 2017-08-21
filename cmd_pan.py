@@ -1,6 +1,6 @@
 import os
 from modules.PanPredic.SVM import svm_bovine
-from modules.PanPredic.cmd_uploader import cmd_workflow
+from modules.PanPredic.cmd_uploader import cmd_workflow, pred_workflow
 from modules.PanPredic.pan_run import panseq
 from modules.PanPredic.conf_gen import generate_conf, gen_match_pred
 from modules.PanPredic.definitions import PAN_RESULTS
@@ -10,6 +10,7 @@ from datetime import datetime
 from modules.PanPredic.definitions import ROOT_DIR
 from pan_run import cmd_prediction
 import shutil
+import pdb
 
 pickle_file = ROOT_DIR + '/hbpickles.p'
 clf_pickle = ROOT_DIR +'/clfpickle.p'
@@ -28,6 +29,7 @@ def pan(args_dict):
     now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
     
     query_files = query_pos + '/copies_' + now
+    print(query_files)
     os.mkdir(query_files)
     tagger(query_pos, '_pos', query_files)
     tagger(query_neg, '_neg', query_files)
@@ -72,31 +74,54 @@ def prediction(results_dict, prediction_files):
     # (5) prediction
 
     clf, sel = svm_bovine(results_dict)
-    pickle.dump(clf, open(clf_pickle, 'wb'))
+    #pickle.dump(clf, open(clf_pickle, 'wb'))
 
     pred_conf = gen_match_pred(prediction_files)
 
     #run panseq against training set with predicting set
     cmd_prediction(pred_conf)
     #parse predicting pangenome
-    prediction_dict = cmd_workflow(PAN_RESULTS + '_pred/pan_genome.txt')
+
+    prediction_dict = pred_workflow(PAN_RESULTS + '_pred/pan_genome.txt')
     pickle.dump(prediction_dict, open(pred_pickle, 'wb'))
 
+    X =[]
+    successes = 0
+    failures = 0
+    pdb.set_trace()
     for genome in prediction_dict:
         print(genome)
-        X = prediction_dict[genome]['values']
-        #must do the same feature selection on training data and on prediction data
+        X = [(prediction_dict[genome]['values'])]
+        print('before transform:')
+        print(len(X[0]))
         X = sel.fit_transform(X)
-        print(clf.predict(X))
+        print(len(X[0]))
+        pred = clf.predict(X)
+        
+        print(pred)
+        #must do the same feature selection on training data and on prediction data
+        if genome.startswith('ine') and pred == 1:
+            successes = successes + 1
+        if genome.startswith('an') and pred == 0:
+            successes = successes + 1
+        if genome.startswith('ine') and pred == 0:
+            failures = failures + 1
+        if genome.startswith('an') and pred == 1:
+            failures = failures + 1
+    #X = sel.fit_transform(X)
+    print(clf.predict(X))
+    print successes
+    print failures
 
 
+        
     
     #test_files = os.listdir(prediction_files):
     #test_syms = sym_linker(test_files)
 
 
 #parse()
-'''
+
 the_pickle = open(ROOT_DIR + '/hbpickles.p', 'rb')
 print("loading pickle")
 #the_pickle.seek(0)
@@ -105,10 +130,10 @@ the_pickle.close()
 
 print("pickle loaded")
 prediction(results_dict, '/home/james/HB')
-'''
+
     
 
-
+'''
 if __name__ == "__main__":
     import argparse              
 
@@ -142,4 +167,4 @@ if __name__ == "__main__":
     print(pan(args_dict))
 
 
-
+'''

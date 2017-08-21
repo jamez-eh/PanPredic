@@ -6,7 +6,10 @@ from os.path import basename
 import re
 import os
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from modules.turtleGrapher.turtle_utils import slugify
 from modules.PanPredic.definitions import ROOT_DIR
+
+
 def generate_hash(filename):
 
     """
@@ -49,13 +52,17 @@ def contig_name_parse(pan_contig):
 
 
 def get_URIs(dir):
+    '''
+    param: dir: a directory of fasta files for which we want to generate a hash for each and prepend a ':'
+    return: hash_dict: a dict in form {genome_name: :A56349fdBafaBCDaq4905834}
+    '''
 
     hash_dict = {}
     for file in os.listdir(dir):
         header = get_fasta_header_from_file(dir + '/' + file)
-        genome_name = get_genome_name(header)
+        genome_name = slugify(get_genome_name(header))
         hash = generate_hash(dir + '/' + file)
-        hash_dict[genome_name] = gu(':' + hash)
+        hash_dict[genome_name] = ':' + hash
 
     return hash_dict
 
@@ -136,7 +143,7 @@ def tagger(dir, tag, dst):
 
             for line in original:
                 if line.startswith('>'):
-                    newname= '>lcl|' + genome + '|contig' + str(contig_index) + '\n'
+                    newname= '>lcl|' + genome + tag+ '|contig' + str(contig_index)  +'\n'
                     edit.write(newname)
                     contig_index = contig_index + 1
                 else:

@@ -21,10 +21,10 @@ def pan(args_dict, pickle_file):
     now = datetime.now()
     now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
     
-
+   
     #create a subdirectory with symlinks to original files (keeps directory clean)
     query_files = sym_linker(query_files)
-
+   
     # (1) generate conf files, these specify locations of genomes as well as panseq run parameters
     #stores them in a dictionary {novel: conf_file, match: conf_file}
     query_dict = generate_conf(query_files)
@@ -52,9 +52,15 @@ def pan(args_dict, pickle_file):
     # (5) prediction
     #prediction()
 
+    return 'SUCCESS'
 
 
+'''
+args_dict = {'i':'/home/james/Bovine/three'}
+
+pickle_file =  '/home/james/pickle.p'
+
+pan(args_dict, pickle_file)
 
 
-
-
+'''

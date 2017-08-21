@@ -1,4 +1,5 @@
 from sklearn import svm
+import pdb
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
@@ -8,13 +9,14 @@ from sklearn.naive_bayes import BernoulliNB
 from sklearn.model_selection import cross_val_score
 from modules.PanPredic.queries import get_genomes
 from modules.PanPredic.data_shape import get_data, get_vectors, bovinator
-import pickle
+import cPickle as pickle
 from matplotlib import pyplot as plt
 from sklearn.model_selection import StratifiedKFold
 from sklearn.feature_selection import RFECV
 from sklearn.datasets import make_classification
 from sklearn.svm import SVC
 import numpy as np
+import pandas as pd
 
 
 '''
@@ -73,15 +75,13 @@ def svm_bovine(pan_dict):
     
     # an additional svm is made here, used only to analyze feature selection
     svm = param_opt(X, y)
-    
-    #svc = SVC(kernel="linear", C=0.01)
-    #svc_rbf = SVC(kernel="rbf", C=100.0, gamma=0.0001)
+
     
     #get best variance selection
-    sel = cross_val_variance(svm, X, y, 10)
-
-    #cross_val_variance(svc_rbf, X, y, 10)
+    sel = cross_val_variance(svm, X, y, 100)
+    X = sel.fit_transform(X)
     
+    svm = svm.fit(X,y)        
     #recursive_selection(svc, X, y)
     return svm, sel
 
@@ -89,22 +89,31 @@ def alternator(label_dict):
     '''
     hopefully combine this and svm_bovine into one pipeline
     '''
-
+    file = '/home/james/results_summary.txt'
     print('alternating')
-    
     for label in label_dict:
+        print(label)
+    for label in label_dict:
+        print(label)
         X = label_dict[label]['X']
         y = label_dict[label]['y']
+        print(np.unique(map(len, X)))
+        print(np.asarray(X).dtype)
+        if np.unique(y).size > 1:
+            if np.mean(y) > 0.4 and np.mean(y) < 0.6:
+                svm = param_opt(X, y, label)
+                #sel = cross_val_variance(svm, X, y, 10)
 
-        svm = param_opt(X, y)
-        sel = cross_val_variance(svm, X, y, 10)
+        else:
+            print('all genomes possess the same phenotype for: ')
+            print(label)
 
-        return svm, sel
 
 
     
 
 def param_opt(X, y):
+    file = '/home/james/results_summary.txt'
     print('optimizing parameters')
     param_range = [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
 
@@ -120,9 +129,25 @@ def param_opt(X, y):
                       cv=10,
                       n_jobs=-1)
     gs = gs.fit(X, y)
-    print(gs.best_score_)
     params = gs.best_params_
+    score = gs.best_score_
+    '''
+    score_dict = gs.best_params_
+    score_dict['label'] = label
+    score_dict['score'] = gs.best_score_
+    table = {'label':label,'score':gs.best_score_}
+   
+    df = pd.DataFrame(table, index=[0])
+    df = df.sort(axis=1)
+   
+    f = open(file, 'a')
+    #f.write(gs.best_score_)
+    df.to_csv(f, header=False, mode='a', sep='\t')
+    #f.write(params)
+    f.close()
+    '''
     print(params)
+    print(score)
     
     if params['kernel'] == 'linear':
         return SVC(kernel=params['kernel'], C=params['C'])
