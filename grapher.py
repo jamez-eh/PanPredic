@@ -11,14 +11,7 @@ from modules.beautify import beautify
 
 import ast
 #from modules.PanPredic.pan import pan
-import redis
-from rq import Queue
 
-redis_url = config.REDIS_URL
-redis_conn = redis.from_url(redis_url)
-singles_q = Queue('singles', connection=redis_conn)
-multiples_q = Queue('multiples', connection=redis_conn,
-                    default_timeout=config.DEFAULT_TIMEOUT)
 
 #generates a hash for a file
 def generate_hash(filename):
@@ -104,6 +97,7 @@ def get_URIs(dir):
 
     return hash_dict
 
+
 def create_graph(dict):
     '''
     param: dict
@@ -119,45 +113,4 @@ def create_graph(dict):
             else: print('Pangenome for this genome is already in Blazegraph')
 
 
-'''
-def pan_graph(single_dict, job_id, query_dir):
-    print('james_debug query_dir: ' + str(query_dir))
 
-    job_dict = {}
-    job_pan = singles_q.enqueue(pan, single_dict, depends_on=job_id)
-
-    dict = ast.literal_eval(job_pan.result)
-    graph = generate_graph()
-    for region in dict:
-        for genomeURI in dict[region]:
-            #checks if genome URI already has a pangenome associated, if so we don't need to process it further
-            if not get_single_region(genomeURI):
-                job_pan_datastruct = multiples_q.enqueue(graph_upload(), graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion', depends_on=job_pan)
-                job_dict[str(genomeURI) + '_job_pan_datastruct'] = job_pan_datastruct
-                #clears graph
-                graph = generate_graph()
-            else: print('Pangenome for this genome is already in Blazegraph')
-
-
-            job_pan_beautify = singles_q.enqueue(beautify, single_dict, query_dir + '_panseq.p', depends_on=job_pan,
-                                                 result_ttl=-1)
-
-
-    return job_dict
-
-    job_pan_beautify = singles_q.enqueue(beautify, single_dict, query_dir + 'panseq.p', depends_on=job_pan, result_ttl=-1)
-
-def graph_upload(graph, dict, genomeURI, region):
-
-    bundles two functions together so it queuable
-    :param graph: 
-    :param dict: 
-    :param genomeURI: amr_dict
-    :param region: 
-    :return: 
-
-    graph = parse_gene_dict(graph, dict[region][genomeURI], genomeURI, 'PanGenomeRegion')
-    upload_graph.upload_graph(graph)
-
-
-'''
