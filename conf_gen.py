@@ -1,4 +1,4 @@
-from modules.PanPredic.definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS
+from modules.PanPredic.definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS, PAN_IDENT
 #from modules.PanPredic.queries import check_panseq
 import os
 from platform import system
@@ -54,7 +54,7 @@ def gen_novel(genome_files):
                     b'minimumNovelRegionSize	500 \n',
                     b'novelRegionFinderMode	no_duplicates \n',
                     b'muscleExecutable ' + muscle + '\n',
-                    b'percentIdentityCutoff	99 \n',
+                      b'percentIdentityCutoff ' + PAN_IDENT.encode() + '\n',
                     b'runMode	novel \n',
                     b'overwrite 1 \n',
                       b'sha1 1 \n'])
@@ -73,7 +73,7 @@ def gen_match(genome_files):
                     b'muscleExecutable ' + muscle + '\n',
                      b'fragmentationSize	500 \n',
                      b'minimumNovelRegionSize    500 \n',
-                    b'percentIdentityCutoff	98 \n',
+                     b'percentIdentityCutoff ' + PAN_IDENT.encode() + '\n',
                      b'maxNumberResultsInMemory    125 \n',
                     b'coreGenomeThreshold   1000000000 \n',
                     b'runMode	pan \n',
@@ -104,7 +104,7 @@ def gen_match_pred(genome_files):
                     b'blastDirectory ' + blast.encode() +  '\n',
                     b'muscleExecutable ' + muscle + '\n',
                      b'maxNumberResultsInMemory    125 \n',
-                    b'percentIdentityCutoff	98 \n',
+                     b'percentIdentityCutoff ' + PAN_IDENT.encode() + '\n',
                     b'coreGenomeThreshold   1000000000 \n',
                     b'minimumNovelRegionSize    500 \n',
                     b'runMode	pan \n',

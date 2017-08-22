@@ -21,3 +21,13 @@
 ## How it works:
 
    The command line interface runs panseq on the positive and negative directories and retrieves presence or absence vectors from the Panseq output. A support vector machine is then trained on this output after parameter optimization and feature selection. Panseq is then ran in novel mode with the unknown directory. The output from this Panseq run and the SVM trained are then used to make predictions for each genome.
+
+
+## Dependencies:
+
+   Panseq
+   Sci-Kit Learn
+   Pandas
+   Numpy
+   
+   
