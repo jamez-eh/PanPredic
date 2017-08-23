@@ -7,7 +7,6 @@ import pickle
 from modules.loggingFunctions import initialize_logging
 import logging
 from datetime import datetime
-import pdb
 from modules.PanPredic.grapher import create_graph
 
 log_file = initialize_logging()
@@ -30,7 +29,7 @@ def pan(args_dict, pickle_file):
     #stores them in a dictionary {novel: conf_file, match: conf_file}
     query_dict = generate_conf(query_files)
     #log.debug('query dict:' + str(query_dict))
-
+    
     # (2) run panseq
     panseq(query_dict)
     #log.debug('panseq finished')
@@ -57,12 +56,12 @@ def pan(args_dict, pickle_file):
     return 'SUCCESS'
 
 
-'''
-args_dict = {'i':'/home/james/ecoli_genomes'}
+
+args_dict = {'i':'/home/james/filtered_genomes'}
 
 pickle_file =  '/home/james/pickle.p'
 
 pan(args_dict, pickle_file)
-'''
+
 
 

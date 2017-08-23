@@ -3,7 +3,7 @@ import pandas as pd
 import json
 import re
 from modules.PanPredic.definitions import ROOT_DIR
-import pdb
+
 import sys 
 
 import os
@@ -37,45 +37,7 @@ def parse_pan(file):
 
     return ROOT_DIR + '/tests/data/genparsed.txt'
 
-def pickler(file, query_files):
-    '''
-    This is creates a pickle to pass to the front end.............. (which we aren't doing)
-    '''
-    df = pd.read_csv(file, sep=None, header=None)
-    os.remove(file)
 
-
-    region_list = []
-
-    for row in df.iterrows():
-        index, data = row
-        pan_list = data.tolist()
-        row_dict = {}
-
-        # the variable gene name here is just so that the module will work within superphy (datastruct_savvy)
-        # The 'GENE_NAME' actually refers to the Locus Name and should be renamed to reflect this
-
-
-
-        row_dict['hitname'] = str(pan_list[0])
-        row_dict['filename'] = pan_list[1]
-
-        row_dict['hitstart'] = pan_list[2]
-        row_dict['hitstop'] = pan_list[3]
-        row_dict['hitcutoff'] = 90
-        row_dict['hitorientation'] = 'N/A'
-        row_dict['analysis'] = 'Panseq'
-
-        # parse name to accession number
-        row_dict['contigid'] = contig_name_parse(pan_list[4])
-
-        region_list.append(row_dict)
-
-    pickle_file = query_files + '/panseq.p'
-    pickle.dump(region_list, open(pickle_file, 'wb'))
-
-
-    return pickle_file
 
 
 # turn a datafarame to a list of rows lists
@@ -204,12 +166,20 @@ def workflow(pan_file, seq_file, query_files):
     parsed_file = parse_pan(pan_file)
     pan_dict = pan_to_dict(parsed_file, hash_dict)
 
+    for entry in pan_dict:
+        print entry
+
     #make a pickle for the front end (beautify)
     #pickle = pickler(parsed_file, query_files)
 
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
-
+    for entry in final_dict:
+        print entry
+        for genome in final_dict[entry]:
+            print genome
+            for contig in final_dict[entry][genome]:
+                print contig
     return final_dict
 
 

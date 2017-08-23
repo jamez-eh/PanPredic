@@ -1,15 +1,16 @@
 from datetime import datetime
-import pdb
+
 from Bio import SeqIO
 import subprocess
 from os.path import basename
 import re
 import os
+
 from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.turtleGrapher.turtle_utils import slugify
+from modules.turtleGrapher.turtle_utils import slugify, generate_hash
 from modules.PanPredic.definitions import ROOT_DIR
 
-
+'''
 def generate_hash(filename):
 
     """
@@ -24,7 +25,7 @@ def generate_hash(filename):
     with open(filename, 'rb') as f:
     #  we apply a sort func to make sure the contents are the same,        # regardless of order
         return sha1(str(sorted(f.readlines())).encode('utf-8')).hexdigest()
-
+'''
     
 def contig_name_parse(pan_contig):
     """
@@ -34,51 +35,20 @@ def contig_name_parse(pan_contig):
     :return: 
         the basename of the contig
     """
-    pan_contig = re.sub('[|]', '', pan_contig)
+   
 
-    if re.search('(.*?)(?=_E)', pan_contig):
-        #m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+    #first if statement checks to see if contigs are named lcl|GCA_000333215|CAPM01000026.1_Escherichia_coli_Nissle_1917_WGS_project_CAPM00000000_data__contig_11__whole_genome_shotgun_sequence
+    if re.search('(?<=\|)(.*)', pan_contig):
+       m = re.search('(?<=\|)(.*)', pan_contig)
+       pan_contig = m.group(0)
+       print(pan_contig)
+       m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+       pan_contig = m.group(0)
+    elif re.search('(.*?)(?=_E)', pan_contig):
         m = re.search('(.*?)(?=_E)', pan_contig)
-        #m = re.search('(?<=\|).+', m.group(0))
 
-    #elif re.search('(?<=\|).+', pan_contig):
-        #m = re.search('(?<=\|).+', pan_contig)
-        #m = re.search('(?<=\|).+', m.group(0))
+    return pan_contig
 
-    else:
-        return pan_contig
-
-    return m.group(0)
-
-
-def get_URIs(dir):
-    '''
-    param: dir: a directory of fasta files for which we want to generate a hash for each and prepend a ':'
-    return: hash_dict: a dict in form {genome_name: :A56349fdBafaBCDaq4905834}
-    '''
-
-    hash_dict = {}
-    for file in os.listdir(dir):
-        header = get_fasta_header_from_file(dir + '/' + file)
-        genome_name = slugify(get_genome_name(header))
-        hash = generate_hash(dir + '/' + file)
-        hash_dict[genome_name] = ':' + hash
-
-    return hash_dict
-
-
-def get_fasta_header_from_file(filename):
-    """
-    Gets the first fasta sequence from the file, and returns the fasta header.
-    The files should have already been validated as fasta format.
-
-    :param filename: the absolute path of the fasta file
-    :return: header
-    """
-
-    for record in SeqIO.parse(filename, "fasta"):
-        print(record.description)
-        return record.description
 
 def get_genome_name(header):
     """
@@ -121,6 +91,40 @@ def get_genome_name(header):
             break
 
     return str(genome_name)
+
+
+def get_fasta_header_from_file(filename):
+    """
+    Gets the first fasta sequence from the file, and returns the fasta header.
+    The files should have already been validated as fasta format.
+
+    :param filename: the absolute path of the fasta file
+    :return: header
+    """
+
+    for record in SeqIO.parse(filename, "fasta"):
+        print(record.description)
+        return record.description
+
+def get_URIs(dir):
+    '''
+    param: dir: a directory of fasta files for which we want to generate a hash for each and prepend a ':'
+    return: hash_dict: a dict in form {genome_name: :A56349fdBafaBCDaq4905834}
+    '''
+
+    hash_dict = {}
+    for file in os.listdir(dir):
+        print(file)
+        header = get_fasta_header_from_file(dir + '/' + file)
+        genome_name = slugify(get_genome_name(header))
+        hash = generate_hash(dir + '/' + file)
+        print hash
+        hash_dict[genome_name] = ':' + hash
+    print(hash_dict)
+    return hash_dict
+
+
+
 
 
 
