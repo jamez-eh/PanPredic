@@ -3,7 +3,7 @@ import pandas as pd
 import json
 import re
 from modules.PanPredic.definitions import ROOT_DIR
-
+import pdb
 import sys 
 
 import os
@@ -37,6 +37,13 @@ def parse_pan(file):
 
     return ROOT_DIR + '/tests/data/genparsed.txt'
 
+
+def genome_replace(hash_dict, genome):
+    pdb.set_trace()
+    for entry in hash_dict:
+        if re.search((genome), entry):
+            return hash_dict[entry]
+    return genome
 
 
 
@@ -79,11 +86,8 @@ def pan_to_dict(file, hash_dict):
         contig_name = contig_name_parse(pan_list[4])
 
         genome = pan_list[1]
-
-        # replace genome name with genome URI
-        if genome in hash_dict:
-            genome = hash_dict[genome]
-
+        genome = genome_replace(hash_dict, genome)
+        
         if genome in genome_dict:
 
             if contig_name in genome_dict[genome]:
@@ -133,17 +137,6 @@ def merge_dicts(pan_dict, seq_dict):
 
 
 
-#replaces contig names from panseq with those compatible with blazegraph
-def hash_merge(hash_dict, pan_dict):
-
-    for contig in pan_dict:
-        pan_dict[hash_dict[contig]] = pan_dict[contig]
-        del pan_dict[contig]
-
-    return pan_dict
-
-
-
 #parses the locus name for the locusId when we are adding additional pan genome regions to the db
 def resolve_locus(locus):
 
@@ -161,25 +154,25 @@ def workflow(pan_file, seq_file, query_files):
     param: query_files: dir with sequences that generated the pangenome
     '''
 
-
+    #get a dict of genome_name:file hash
     hash_dict = get_URIs(query_files)
-    parsed_file = parse_pan(pan_file)
-    pan_dict = pan_to_dict(parsed_file, hash_dict)
 
+    
+    parsed_file = parse_pan(pan_file)
+    
+    pan_dict = pan_to_dict(parsed_file, hash_dict)
     for entry in pan_dict:
-        print entry
+        print(entry)
+    #replace genome names with file hashes
+
+
 
     #make a pickle for the front end (beautify)
     #pickle = pickler(parsed_file, query_files)
 
     seq_dict = get_sequence_dict(seq_file)
     final_dict = merge_dicts(pan_dict, seq_dict)
-    for entry in final_dict:
-        print entry
-        for genome in final_dict[entry]:
-            print genome
-            for contig in final_dict[entry][genome]:
-                print contig
+
     return final_dict
 
 

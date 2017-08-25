@@ -99,7 +99,7 @@ def get_single_region(genome):
 
     }} 
     LIMIT 1
-    """.format(genome = genome)
+    """.format(genome = gu(genome))
     return query
 
 
@@ -131,7 +131,7 @@ def get_virulence(genome):
    			?p :isFoundIn <{genome}> .
 
     }}
-    """.format(genome = genome)
+    """.format(genome = gu(genome))
 
     return query
 

@@ -1,11 +1,14 @@
 import subprocess
+import re
 import sys
 import shutil
 from modules.PanPredic.definitions import ROOT_DIR
-#from modules.PanPredic.queries import query_panseq
+from modules.PanPredic.queries import query_panseq
 import os
 from platform import system
 from datetime import datetime
+
+
 
 #TODO: add src to definitions and dst to definitions
 def sym_linker(file_list):
@@ -32,24 +35,8 @@ def sym_linker(file_list):
             except:
                 print(dst + '/' + file +' already exists')
 
-
     return dst
 
-
-
-
-
-def pan_loc():
-
-    cmd = "where" if system() == "Windows " else "which"
-   
-    try:
-        panseq = subprocess.check_output([cmd, 'panseq'])
-        
-        return panseq
-              
-    except Exception as error:
-        print('panseq installation not found')
 
 
 
@@ -61,47 +48,37 @@ def panseq(query_dict):
     :param query_dict: 
     :return: 
     '''
-    #panseq = pan_loc()
+
 
     match_config = str(query_dict['match'])
     novel_config = str(query_dict['novel'])
 
     #TODO: make this query safe for very large lists (with more genomes this will break)
-    '''
+
     pan_list = query_panseq()
 
 
     if pan_list:
         #build the fasta file required as a queryfile for the pan run
         query_file = build_pan(pan_list)
-        #print('QUERYFILE COUNT PRE JOIN: \n')
-        #print(sequence_counter(query_file))
-
 
         #run panseq to find novel pangenome regions
         novel = subprocess.Popen(["panseq", novel_config], stdout=sys.stdout)
         novel.communicate()
 
-        #print('NOVEL REGIONS COUNT: \n')
-        #print(sequence_counter('/home/james/backend/app/modules/PanPredic/tests/data/novelResults/novelRegions.fasta'))
-
-
-        # append these pangenome regions to current pangenome fastareference
         join_files(query_file, ROOT_DIR + '/tests/data/novelResults/novelRegions.fasta')
-        #print('QUERYFILE COUNT POST JOIN: \n')
-        #print(sequence_counter(query_file))
 
-    #finds a full set of pangenome regions for the queried genomes
-    '''        
+    #finds a full set of pangenome regions for the queried genomes, if novel runs then the config for match will be altered to include a queryfile
+
     match = subprocess.Popen(['panseq', match_config], stdout=sys.stdout)
 
 
     match.communicate()
 
-    '''
+
     if pan_list:
         os.remove(query_file)
-    '''
+
     
 def cmd_prediction(conf_file):
     
@@ -132,7 +109,16 @@ def join_files(file1, file2):
     first.close()
 
 
-#builds a pangenome by querying blazegraph
+#remove the appended superphy# from a pan genome region name
+def parse_pan_region(pan_region):
+
+    m = re.search('(?<=#)(.+)', pan_region)
+
+    return m.group(0)
+
+
+
+    #builds a pangenome by querying blazegraph
 def build_pan(pan_list):
     """
     :param :
@@ -147,18 +133,11 @@ def build_pan(pan_list):
     for entry in pan_list:
         if i % 2 != 0:
             f = open(filename, "a+")
-            f.write('>' + entry + '\n')
+            f.write('>' + parse_pan_region(entry) + '\n')
         else:
             f = open(filename, "a+")
             f.write(entry + '\n')
         f.close()
         i = i + 1
     return filename
-
-
-
-
-
-
-
 

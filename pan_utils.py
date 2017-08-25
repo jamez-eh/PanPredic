@@ -36,17 +36,37 @@ def contig_name_parse(pan_contig):
         the basename of the contig
     """
    
+    pan_contig = re.sub('[|]', '', pan_contig)
+    #first if statement checks to see if contigs are named
+    #lcl|GCA_000333215|CAPM01000026.1_Escherichia_coli_Nissle_1917_WGS_project_CAPM00000000_data__contig_11__whole_genome_shotgun_sequence
+    #I had to comment this out so that it matches the contig names from seq.io
 
-    #first if statement checks to see if contigs are named lcl|GCA_000333215|CAPM01000026.1_Escherichia_coli_Nissle_1917_WGS_project_CAPM00000000_data__contig_11__whole_genome_shotgun_sequence
+    #if GCA is in contig name then contig is named GCA_329487234CAPM01000026.1
+    find = re.compile(r'(GCA_)')
+    
+    if re.search(find, pan_contig):
+        pan_contig = re.search('[^_]*_[^_]*', pan_contig).group(0)
+    else:
+        pan_contig = re.search('^([^_]*)', pan_contig).group(0)
+    
+    '''
+    if re.search('(.*?)(?=\..)', pan_contig):
+        m = re.search('(.*?)(?=\..)', pan_contig)
+        pan_contig = m.group(0)
+    '''
+    '''    
     if re.search('(?<=\|)(.*)', pan_contig):
        m = re.search('(?<=\|)(.*)', pan_contig)
        pan_contig = m.group(0)
        print(pan_contig)
-       m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+       m = re.search('(?<=\|)(.*?)(?=_)', pan_contig)
        pan_contig = m.group(0)
-    elif re.search('(.*?)(?=_E)', pan_contig):
-        m = re.search('(.*?)(?=_E)', pan_contig)
-
+    '''
+    '''
+    if re.search('(.*?)(?=_)', pan_contig):
+        m = re.search('(.*?)(?=_)', pan_contig)
+        pan_contig = m.group(0)
+    '''
     return pan_contig
 
 

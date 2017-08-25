@@ -1,5 +1,5 @@
 from modules.PanPredic.definitions import ROOT_DIR, PAN_RESULTS, NOVEL_RESULTS, PAN_IDENT
-#from modules.PanPredic.queries import check_panseq
+from modules.PanPredic.queries import check_panseq
 import os
 from platform import system
 import subprocess
@@ -46,7 +46,7 @@ def gen_novel(genome_files):
 
     with open(ROOT_DIR + '/panseq_novel_pangenome.conf', 'wb') as f:
         f.writelines([b'queryDirectory   ' + genome_files.encode() + b'\n',
-                    b'referenceDirectory '	+ ROOT_DIR.encode() + b'/Data \n',
+                    b'referenceDirectory '	+ ROOT_DIR.encode() + b'/tests/data \n',
                     b'baseDirectory  ' + NOVEL_RESULTS.encode() + b'\n',
                     b'numberOfCores	4 \n',
                     b'mummerDirectory '	+ mummer.encode() + '\n',
@@ -81,11 +81,11 @@ def gen_match(genome_files):
                     b'overwrite 1 \n',
                      b'sha1 1 \n']
 
-   # pan_list = check_panseq()
+    pan_list = check_panseq()
 
 
-    #if pan_list and not cmd:
-    #    settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
+    if pan_list:
+        settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
 
 
 
@@ -93,36 +93,7 @@ def gen_match(genome_files):
         f.writelines(settings_list)
         return ROOT_DIR + '/panseq_pan_pangenome.conf'
 
-def gen_match_pred(genome_files):
-    muscle, mummer, blast = program_loc()
 
-    settings_list = [b'queryDirectory   ' + genome_files.encode() + b'\n',
-                    b'baseDirectory  '  +  PAN_RESULTS.encode() + b'_pred\n',
-                     b'queryFile    ' + PAN_RESULTS.encode() + b'/accessoryGenomeFragments.fasta\n',
-                    b'numberOfCores	5  \n',
-                    b'mummerDirectory '	+ mummer.encode() + '\n',
-                    b'blastDirectory ' + blast.encode() +  '\n',
-                    b'muscleExecutable ' + muscle + '\n',
-                     b'maxNumberResultsInMemory    125 \n',
-                     b'percentIdentityCutoff ' + PAN_IDENT.encode() + '\n',
-                    b'coreGenomeThreshold   1000000000 \n',
-                    b'minimumNovelRegionSize    500 \n',
-                    b'runMode	pan \n',
-                    b'nameOrId	id \n',
-                    b'overwrite 1 \n',
-                     b'sha1 1 \n']
-
-   # pan_list = check_panseq()
-
-
-    #if pan_list and not cmd:
-    #    settings_list.insert(1, b'queryFile  ' +  ROOT_DIR.encode() +  b'/Data/PanGenomeRegions.fasta\n')
-
-
-
-    with open(ROOT_DIR + '/panseq_pred_pangenome.conf', 'wb') as f:
-        f.writelines(settings_list)
-        return ROOT_DIR + '/panseq_pred_pangenome.conf'
 
 #driver function generates both necessary conf files
 def generate_conf(genome_files):
