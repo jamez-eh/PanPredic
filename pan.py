@@ -1,7 +1,7 @@
 
 from modules.PanPredic.uploader import workflow
 from modules.PanPredic.pan_run import panseq, sym_linker
-from modules.PanPredic.command_line.cmd_conf_gen import generate_conf
+from modules.PanPredic.conf_gen import generate_conf
 from modules.PanPredic.definitions import PAN_RESULTS
 import pickle
 from modules.loggingFunctions import initialize_logging
@@ -20,7 +20,7 @@ def pan(args_dict, pickle_file):
     
 
     #create a subdirectory with symlinks to original files (keeps directory clean)
-    #query_files = sym_linker(query_files)
+    query_files = sym_linker(query_files)
    
     # (1) generate conf files, these specify locations of genomes as well as panseq run parameters
     #stores them in a dictionary {novel: conf_file, match: conf_file}
@@ -46,12 +46,6 @@ def pan(args_dict, pickle_file):
     return 'SUCCESS'
 
 
-
-args_dict = {'i':'/home/james/ecoli_genomes'}
-
-pickle_file =  '/home/james/pickle.p'
-
-pan(args_dict, pickle_file)
 
 
 

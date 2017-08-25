@@ -161,8 +161,7 @@ def workflow(pan_file, seq_file, query_files):
     parsed_file = parse_pan(pan_file)
     
     pan_dict = pan_to_dict(parsed_file, hash_dict)
-    for entry in pan_dict:
-        print(entry)
+
     #replace genome names with file hashes
 
 
