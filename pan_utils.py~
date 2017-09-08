@@ -1,0 +1,25 @@
+import re
+
+def contig_name_parse(pan_contig):
+    """
+    The panseq contig name is unhelpful
+    :param:
+        a contig named by panseq
+    :return: 
+        the basename of the contig
+    """
+    pan_contig = re.sub('[|]', '', pan_contig)
+
+    if re.search('(.*?)(?=_E)', pan_contig):
+        #m = re.search('(?<=\|)(.*?)(?=_E)', pan_contig)
+        m = re.search('(.*?)(?=_E)', pan_contig)
+        #m = re.search('(?<=\|).+', m.group(0))
+
+    #elif re.search('(?<=\|).+', pan_contig):
+        #m = re.search('(?<=\|).+', pan_contig)
+        #m = re.search('(?<=\|).+', m.group(0))
+
+    else:
+        return pan_contig
+
+    return m.group(0)

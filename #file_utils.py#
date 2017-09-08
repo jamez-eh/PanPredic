@@ -1,0 +1,15 @@
+from Bio import SeqIO
+
+
+def fasta_formatter(dir, tag):
+    '''
+    params: dir: directory of fasta files with header to alter
+    params: tag: if it is a positive or negative tag
+    '''
+    for original_file in os.listdir(dir):
+        with open(original_file) as original, open(corrected_file, 'w') as corrected:
+            records = SeqIO.parse(original_file, 'fasta')
+                for record in records:
+                    record.id = 
+                    record.description = ''
+                    SeqIO.write(record, dir+ '/' + original_file, 'fasta')
