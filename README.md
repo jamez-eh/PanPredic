@@ -24,10 +24,14 @@
 
 
 ## Dependencies:
+   
+   Note: dependencies can be acquired by cloning https://github.com/superphy/docker-flask-conda and exporting the environment.yml file into a new conda environment. 
 
    Panseq
    Sci-Kit Learn
    Pandas
    Numpy
    
-   
+## Issues:
+
+   Panseq may create new pangenome regions, which may be added to database or affect predictive ability. Further testing must be done to determine the source of this error.   
