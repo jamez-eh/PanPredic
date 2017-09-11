@@ -23,7 +23,6 @@ before_install:
   # Useful for debugging any issues with conda
   - conda info -a
 install:
-  - cd app/
   - ls
   #### Recreate our Conda env for testing
   - wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
