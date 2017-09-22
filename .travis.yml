@@ -1,0 +1,36 @@
+sudo: required
+lanugage: python
+python:
+  - "2.7"
+before_install:
+  - sudo apt-get update
+  #### miniconda install:
+  # We do this conditionally because it saves us some downloading if the
+  # version is the same.
+  # this isn't exactly required for the repo to work (because the docker-flask-conda image is built sepeartely)
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels bioconda
+  - conda config --add channels conda-forge
+  - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
+install:
+  - ls
+  #### Recreate our Conda env for testing
+  - wget https://raw.githubusercontent.com/superphy/docker-flask-conda/master/app/environment.yml
+  - conda env create -f environment.yml -n backend
+  - source activate backend
+  - pip install pytest
+script:
+  #### Run Pytest
+  - python -m pytest -v
+notifications:
+  email: false
