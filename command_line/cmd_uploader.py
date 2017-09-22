@@ -3,8 +3,7 @@ import pandas as pd
 import json
 import re
 from modules.PanPredic.definitions import ROOT_DIR
-import pdb
-import sys 
+import sys
 
 import os
 from modules.PanPredic.pan_utils import get_URIs
@@ -12,12 +11,12 @@ from modules.PanPredic.pan_utils import get_URIs
 
 
 def cmd_parse_pan(file):
-    
+
     """
     Drops all columns except genome name and presence or abscence vector -> only used to build model for ML
     :param :
         A tab delimited csv file from a panseq output
-    :return: 
+    :return:
        a file with reduced headers and the NA's dropped
     """
 
@@ -28,18 +27,18 @@ def cmd_parse_pan(file):
     df = df.drop_duplicates(subset=['LocusID', 'Genome'], keep='first')
 
     #drop rows we don't need
-    
+
     df.to_csv(ROOT_DIR + '/tests/data/genparsed.txt', mode='w+', header=False, index=False, sep = '\t')
-    
+
     return ROOT_DIR + '/tests/data/genparsed.txt'
 
 def pred_parse_pan(file):
-    
+
     """
     Drops all columns except genome name and presence or abscence vector -> only used to build model for ML
     :param :
         A tab delimited csv file from a panseq output
-    :return: 
+    :return:
        a file with reduced headers and the NA's dropped
     """
     #the file size is too big to read in all at once
@@ -55,16 +54,16 @@ def pred_parse_pan(file):
 
 def pred_categorizer(file):
     """
-     
+
     :param:
         A tab delim file that has only two columns, genomename and a 1 for presence and 0 for abscence
-    :return: 
+    :return:
         A dict that only needs {genome : {values: [0, 1, 0, 1, 0, 0 ............]}, .........}
     """
     df = pd.read_csv(file, sep='\t', header=None)
 
     os.remove(file)
-    
+
 
     genome_dict = {}
     pangenome = []
@@ -82,22 +81,22 @@ def pred_categorizer(file):
 
         else:
             genome_dict[genome] = {region : value}
-              
+
     return genome_dict
 
 
 def categorizer(file):
     """
-     
+
     :param:
         A tab delim file that has only two columns, genomename and a 1 for presence and 0 for abscence
-    :return: 
+    :return:
         A dict that only needs {genome : {values: [0, 1, 0, 1, 0, 0 ............]}, .........}
     """
     df = pd.read_csv(file, sep='\t', header=None)
 
     os.remove(file)
-    
+
 
     genome_dict = {}
     pangenome = []
@@ -109,14 +108,14 @@ def categorizer(file):
 
         value = pan_list[2]
         genome = pan_list[1]
-  
+
         if genome in genome_dict:
             genome_dict[genome]['values'].append(value)
 
         else:
             genome_dict[genome] = {'values': []}
             genome_dict[genome]['values'].append(value)
-              
+
     return genome_dict
 
 def get_pan_order():
@@ -188,7 +187,7 @@ def get_vector_order(dict, list):
 
 
     return ordered_dict
-            
+
 
 def cmd_workflow(pan_file):
 
@@ -208,6 +207,6 @@ def pred_workflow(pan_file):
     ordered_dict = get_vector_order(dict, list)
 
     return ordered_dict
-    
+
 #get_pan_order()
 #cmd_workflow('/home/james/backend/app/modules/PanPredic/tests/data/panResults2/pan_genome.txt')

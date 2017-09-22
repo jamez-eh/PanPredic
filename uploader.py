@@ -3,8 +3,7 @@ import pandas as pd
 import json
 import re
 from modules.PanPredic.definitions import ROOT_DIR
-import pdb
-import sys 
+import sys
 
 import os
 from modules.PanPredic.pan_utils import get_URIs
@@ -22,7 +21,7 @@ def parse_pan(file):
     """
     :param :
         A tab delimited csv file from a panseq output
-    :return: 
+    :return:
        a file with reduced headers and the NA's dropped
     """
     #the file size is too big to read in all at once
@@ -39,7 +38,6 @@ def parse_pan(file):
 
 
 def genome_replace(hash_dict, genome):
-    pdb.set_trace()
     for entry in hash_dict:
         if re.search((genome), entry):
             return hash_dict[entry]
@@ -50,12 +48,12 @@ def genome_replace(hash_dict, genome):
 # turn a datafarame to a list of rows lists
 def pan_to_dict(file, hash_dict):
     """
-     
+
     :param:
         A pandas dataframe from panseq
-    :return: 
+    :return:
 
-        A dictionary in the format for superphy to accept to add to blazegraph 
+        A dictionary in the format for superphy to accept to add to blazegraph
         ex. {'Some_Contig_ID':[{'START','STOP','ORIENTATION','GENE_NAME'}, {}, ....], etc}
     """
     df = pd.read_csv(file, sep=None, header=None)
@@ -87,7 +85,7 @@ def pan_to_dict(file, hash_dict):
 
         genome = pan_list[1]
         genome = genome_replace(hash_dict, genome)
-        
+
         if genome in genome_dict:
 
             if contig_name in genome_dict[genome]:
@@ -107,7 +105,7 @@ def get_sequence_dict(file):
     """
     :param:
         a fasta file
-    :return: 
+    :return:
         A dictionary in the format {header:sequence, header:sequence, ....}
     """
 
@@ -157,9 +155,9 @@ def workflow(pan_file, seq_file, query_files):
     #get a dict of genome_name:file hash
     hash_dict = get_URIs(query_files)
 
-    
+
     parsed_file = parse_pan(pan_file)
-    
+
     pan_dict = pan_to_dict(parsed_file, hash_dict)
 
     #replace genome names with file hashes
@@ -173,5 +171,3 @@ def workflow(pan_file, seq_file, query_files):
     final_dict = merge_dicts(pan_dict, seq_dict)
 
     return final_dict
-
-

@@ -1,5 +1,4 @@
 from sklearn import svm
-import pdb
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
@@ -20,7 +19,7 @@ import pandas as pd
 
 
 '''
-Wrappers for scikit-learn.org modules 
+Wrappers for scikit-learn.org modules
 '''
 
 #TODO: make these functional
@@ -30,7 +29,7 @@ Wrappers for scikit-learn.org modules
 
 def svm_predict(region, genome_vector):
     '''
-    
+
     :param region: the amr or virulence factor etc that we are interested in
            genome_vector: a pan genome bit map for genome of interest
     :return: 0 if prediction is false, 1 if prediction is true
@@ -72,16 +71,16 @@ def svm_bovine(pan_dict):
     for bovine/human set only, returns a clf after fitting with data.
     '''
     X,y = bovinator(pan_dict)
-    
+
     # an additional svm is made here, used only to analyze feature selection
     svm = param_opt(X, y)
 
-    
+
     #get best variance selection
     sel = cross_val_variance(svm, X, y, 100)
     X = sel.fit_transform(X)
-    
-    svm = svm.fit(X,y)        
+
+    svm = svm.fit(X,y)
     #recursive_selection(svc, X, y)
     return svm, sel
 
@@ -110,7 +109,7 @@ def alternator(label_dict):
 
 
 
-    
+
 
 def param_opt(X, y):
     file = '/home/james/results_summary.txt'
@@ -122,7 +121,7 @@ def param_opt(X, y):
                   {'C': param_range,
                    'gamma': param_range,
                    'kernel' : ['rbf']}]
-    
+
     gs = GridSearchCV(estimator=SVC(C=1),
                       param_grid = param_grid,
                       scoring='accuracy',
@@ -136,10 +135,10 @@ def param_opt(X, y):
     score_dict['label'] = label
     score_dict['score'] = gs.best_score_
     table = {'label':label,'score':gs.best_score_}
-   
+
     df = pd.DataFrame(table, index=[0])
     df = df.sort(axis=1)
-   
+
     f = open(file, 'a')
     #f.write(gs.best_score_)
     df.to_csv(f, header=False, mode='a', sep='\t')
@@ -148,7 +147,7 @@ def param_opt(X, y):
     '''
     print(params)
     print(score)
-    
+
     if params['kernel'] == 'linear':
         return SVC(kernel=params['kernel'], C=params['C'])
     else:
@@ -162,31 +161,31 @@ def cross_val_variance(model, X, y, cv):
     best_var = 0.0
 
     while (var < 0.25):
-      
+
         #select features with a high amount of variance
         sel = VarianceThreshold(threshold=(var * (1 - var)))
         X_sel = sel.fit_transform(X)
-    
+
         clf = svm.SVC(kernel='linear')
         #cross validation of clf with the parameters above (including feature selection
         scores = cross_val_score(
             model, X_sel, y, cv=10)
 
-      
+
         average = sum(scores)/len(scores)
-      
+
         if average > best:
             best = average
             best_var = var
             best_sel = sel
-        
+
         var = var + 0.001
 
     print('Best CV: ' + str(best))
     print('Best var: ' + str(best_var))
 
     return best_sel
-    
+
 def recursive_selection(model, X, y):
     '''
     runs recursive feature selection for the selected model
@@ -209,7 +208,7 @@ def recursive_selection(model, X, y):
     '''
 
 
-#takes the coefficents from coef_ in linear SVM and then 
+#takes the coefficents from coef_ in linear SVM and then
 
 def inf_features(coef, names):
     '''
@@ -223,7 +222,7 @@ def inf_features(coef, names):
              RFECV, imp, align='center')
     plt.yticks(20, names)
     plt.show()
-                    
+
 
 def opt_feature_num(rfecv):
     plt.xlabel("Number of features selected")

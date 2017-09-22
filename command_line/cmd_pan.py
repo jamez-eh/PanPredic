@@ -10,7 +10,6 @@ from datetime import datetime
 from modules.PanPredic.definitions import ROOT_DIR
 from pan_run import cmd_prediction
 import shutil
-import pdb
 
 pickle_file = ROOT_DIR + '/hbpickles.p'
 clf_pickle = ROOT_DIR +'/clfpickle.p'
@@ -18,16 +17,16 @@ pred_pickle = ROOT_DIR+ '/predpickle.p'
 
 
 def pan(args_dict):
-    
+
     print('root : '+ ROOT_DIR)
-    
+
     query_pos = args_dict['p']
 
     query_neg = args_dict['n']
 
     now = datetime.now()
     now = now.strftime("%Y-%m-%d-%H-%M-%S-%f")
-    
+
     query_files = query_pos + '/copies_' + now
     print(query_files)
     os.mkdir(query_files)
@@ -35,42 +34,42 @@ def pan(args_dict):
     tagger(query_neg, '_neg', query_files)
 
 
-    
-    
+
+
 
     prediction_files = args_dict['q']
-    
+
 
     #create a unique filename
-    
+
 
 
 
     # (1) generate conf files, these specify locations of genomes as well as panseq run parameters
     #stores them in a dictionary {novel: conf_file, match: conf_file}
     query_dict = generate_conf(query_files)
-    
-    
+
+
 
     # (2) run panseq
     panseq(query_dict)
     shutil.rmtree(query_files)
-    
-    
+
+
     results = parse()
     prediction(results, prediction_files)
-    
+
 def parse():
     # (3) Parse panseq results
     results_dict = cmd_workflow(PAN_RESULTS + '/pan_genome.txt')
-    
+
     pickle_file = ROOT_DIR + '/hbpickles.p'
     pickle.dump(results_dict, open(pickle_file, 'wb'))
 
-    return results_dict    
+    return results_dict
 
 def prediction(results_dict, prediction_files):
-    
+
     # (5) prediction
 
     clf, sel = svm_bovine(results_dict)
@@ -88,7 +87,6 @@ def prediction(results_dict, prediction_files):
     X =[]
     successes = 0
     failures = 0
-    pdb.set_trace()
     for genome in prediction_dict:
         print(genome)
         X = [(prediction_dict[genome]['values'])]
@@ -97,7 +95,7 @@ def prediction(results_dict, prediction_files):
         X = sel.fit_transform(X)
         print(len(X[0]))
         pred = clf.predict(X)
-        
+
         print(pred)
         #must do the same feature selection on training data and on prediction data
         if genome.startswith('ine') and pred == 1:
@@ -114,8 +112,8 @@ def prediction(results_dict, prediction_files):
     print failures
 
 
-        
-    
+
+
     #test_files = os.listdir(prediction_files):
     #test_syms = sym_linker(test_files)
 
@@ -131,11 +129,11 @@ the_pickle.close()
 print("pickle loaded")
 prediction(results_dict, '/home/james/HB')
 
-    
+
 
 '''
 if __name__ == "__main__":
-    import argparse              
+    import argparse
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -153,12 +151,12 @@ if __name__ == "__main__":
         help="directory of FASTA files, to make predictions for",
         required=True
         )
-    
+
     args = parser.parse_args()
     args_dict = vars(args)
 
-    
-    
+
+
     print(args_dict)
     args_dict['p'] = os.path.abspath(args_dict['p'])
     args_dict['n'] = os.path.abspath(args_dict['n'])

@@ -5,7 +5,6 @@ from modules.PanPredic.pan_utils import tagger
 import os
 from modules.PanPredic.pan_run import panseq
 import re
-import pdb
 from modules.PanPredic.conf_gen import generate_conf
 from modules.PanPredic.cmd_pan import parse
 from SVM import alternator
@@ -26,7 +25,7 @@ for well in pheno_list:
     pheno_list[index] = m.group(0)
     index = index + 1
 
-    
+
 df = df[df['label'].isin(pheno_list)]
 
 mask = df.value <= 50
@@ -44,12 +43,12 @@ df.to_csv('data_labels.txt', sep='\t', encoding='utf-8')
 print(df)
 
 
-                    
+
 '''
 
 
 def cv_reader():
-                
+
     df = pd.read_csv('/home/james/data_labels.txt', sep='\t')
     df = df.sort_values(['label'], ascending=[False])
 
@@ -62,10 +61,9 @@ def label_maker(df):
     param: df with columns: index, name, label, value sorted by label
     returns: label_dict: {label: {name: value, name: value.. }, ...}
     '''
-    
+
     label_dict = {}
     label_index = 'initial'
-    #pdb.set_trace()
     for row in df.iterrows():
         index, data = row
         row_list = data.tolist()
@@ -77,16 +75,16 @@ def label_maker(df):
             #group duplicates and average their values
             df2 = df2.groupby('name', as_index=False).mean()
 
-    
+
             label_dict[label_index] = {}
-           
+
             for sub_row in df2.iterrows():
                 index, data = sub_row
                 row_list = data.tolist()
                 genome = row_list[0]
                 presence = row_list[2]
                 label_dict[label_index][genome] = presence
-           
+
     return label_dict
 
 
@@ -113,16 +111,14 @@ def multi_test():
     df = cv_reader()
     labels = label_maker(df)
     genome_vectors = get_genome_vectors('/home/james/sequences')
-    #pdb.set_trace()
     label_vectors = {}
     for label in labels:
         y = []
         X = []
         vector_dict = {}
-       
+
         for genome in labels[label]:
-            #pdb.set_trace()
-            
+
             if genome in genome_vectors:
                 if labels[label][genome] > 50:
                     y.append(1)
@@ -135,7 +131,7 @@ def multi_test():
 
         vector_dict = {'X': np.array(X), 'y': np.array(y)}
         label_vectors[label] = vector_dict
-    
+
     alternator(label_vectors)
 
 
