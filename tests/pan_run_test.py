@@ -1,4 +1,4 @@
-import modules.pan_run
+import pan_run
 import shutil
 from hashlib import sha1
 from definitions import ROOT_DIR
@@ -12,7 +12,7 @@ def test_join_files():
     with open(ROOT_DIR +'/tests/data/test_join1.txt', 'rb') as f:
         data = f.read()
 
-    modules.pan_run.join_files(ROOT_DIR + '/tests/data/test_join1.txt', ROOT_DIR + '/tests/data/test_join2.txt')
+    pan_run.join_files(ROOT_DIR + '/tests/data/test_join1.txt', ROOT_DIR + '/tests/data/test_join2.txt')
 
     with open(ROOT_DIR + '/tests/data/test_join1.txt') as f:
         hash = sha1(str(f.readlines()).encode('utf-8')).hexdigest()
