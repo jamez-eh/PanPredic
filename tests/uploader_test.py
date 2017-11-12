@@ -1,4 +1,4 @@
-import uploader
+import modules.PanPredic.uploader as uploader
 import pandas as pd
 from hashlib import sha1
 import os

@@ -1,7 +1,7 @@
-import pan_run
+import modules.PanPredic.pan_run as pan_run
 import shutil
 from hashlib import sha1
-from definitions import ROOT_DIR
+from modules.PanPredic.definitions import ROOT_DIR
 import os
 
 
