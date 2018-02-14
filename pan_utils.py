@@ -6,8 +6,8 @@ from os.path import basename
 import re
 import os
 
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.turtleGrapher.turtle_utils import slugify, generate_hash
+from middleware.graphers.turtle_utils import generate_uri as gu
+from middleware.graphers.turtle_utils import slugify, generate_hash
 from modules.PanPredic.definitions import ROOT_DIR
 
 '''

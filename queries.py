@@ -1,8 +1,8 @@
 from os import path
 import sys
 #sys.path.append(path.abspath('/home/james/backend/app/'))
-from modules.decorators import submit, tolist, prefix, todict
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
+from middleware.decorators import submit, tolist, prefix, todict
+from middleware.graphers.turtle_utils import generate_uri as gu
 
 
 #TODO: Refactor queries so there are fewer of them and they accept arguments

@@ -2,12 +2,12 @@ import os
 import re
 import config
 from Bio import SeqIO
-from modules.turtleGrapher.datastruct_savvy import parse_gene_dict
-from modules.turtleGrapher.turtle_grapher import generate_graph
-from modules.turtleGrapher.turtle_utils import generate_uri as gu
-from modules.blazeUploader import upload_graph
+from middleware.graphers.datastruct_savvy import parse_gene_dict
+from middleware.graphers.turtle_grapher import generate_graph
+from middleware.graphers.turtle_utils import generate_uri as gu
+from middleware.blazegraph import upload_graph
 from modules.PanPredic.queries import get_single_region
-from modules.beautify import beautify
+from middleware.display import beautify
 
 import ast
 #from modules.PanPredic.pan import pan

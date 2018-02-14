@@ -7,7 +7,7 @@ import sys
 
 import os
 from modules.PanPredic.pan_utils import get_URIs
-from modules.turtleGrapher.turtle_utils import slugify
+from middleware.graphers.turtle_utils import slugify
 import pickle
 
 from modules.PanPredic.pan_utils import contig_name_parse
